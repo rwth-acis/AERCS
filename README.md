@@ -1,2 +1,1 @@
-# AERCS
-This repository contains the codes of AERCS.
+This repository contains codes of Academic Event Recommender system for Computer Scientists (AERCS). It is still under development.
