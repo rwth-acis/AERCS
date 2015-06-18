@@ -13,7 +13,7 @@ public class ConnectionException extends Exception {
     /**
    * ConnectionException ( String s )
    * Wird geworfen bei Problemen beim Datenbankverbindungsaufbau
-   * @param String Enhält eine Fehlermeldung, die aussagt, wo und warum
+   * @param String Enhalt eine Fehlermeldung, die aussagt, wo und warum
    *        der Fehler aufgetreten ist
    */
     public ConnectionException(String s) {
