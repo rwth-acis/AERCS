@@ -13,7 +13,9 @@ import i5.las2peer.restMapper.tools.ValidationResult;
 import i5.las2peer.restMapper.tools.XMLCheck;
 import i5.las2peer.security.UserAgent;
 import i5.las2peer.services.aercs.dbms.bdobjects.EventSeriesPeer;
+import i5.las2peer.services.aercs.dbms.bdobjects.ObjectQuery;
 
+import java.io.Console;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -188,4 +190,58 @@ public class ServiceClass extends Service {
 		return resp;
 	}
 
+	
+	/*
+	 * Returns all events with given series.
+	 */
+	@GET
+	@Path("events")
+	public HttpResponse selectEvents(
+			@QueryParam(name="series", defaultValue = "") String series,
+			@QueryParam(name="id", defaultValue = "-1") String id,
+			@QueryParam(name="item", defaultValue = "1") String item){
+		int httpStatus = 200;
+		String content = new String();
+		if(series.length() == 0) {
+			httpStatus = 400;
+			content = "series should not be empty";
+		}
+		else if(id.equals("-1")) {
+			httpStatus = 400;
+			content = "id should not be empty";
+		}
+		else {
+			EventSeriesPeer es = new EventSeriesPeer();
+			//ObjectQuery events = new ObjectQuery();
+			//String seriesName = events.querySSeries(id);
+			
+			JSONArray jsa = new JSONArray();
+			if(item.equals("1")){
+				ResultSet rs = es.selectEventsForASeries(id);
+				try {
+					while (rs.next()) {
+						JSONObject jso = new JSONObject();
+						jso.put("id", rs.getString(1));
+						jso.put("name", rs.getString(2));
+						jso.put("year", rs.getString(3));
+						jso.put("country", rs.getString(4));
+						jso.put("event_key", rs.getString(5));
+						jsa.add(jso);
+					}
+					rs.getStatement().close();
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					httpStatus = 500;
+					content = "A Database Error occured";
+				}
+			}
+			if(httpStatus == 200) {
+				content = jsa.toJSONString();
+			}
+		}
+		HttpResponse resp = new HttpResponse(content);
+		resp.setStatus(httpStatus);
+		return resp;
+	}
 }
