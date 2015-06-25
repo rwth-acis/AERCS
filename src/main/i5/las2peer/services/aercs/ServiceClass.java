@@ -220,7 +220,7 @@ public class ServiceClass extends Service {
 			JSONObject jso_name = new JSONObject();
 			jso_name.put("series_name", seriesName);
 			jsa.add(jso_name);
-			
+						
 			if(item.equals("1")){
 				ResultSet rs = es.selectEventsForASeries(id);
 				try {
