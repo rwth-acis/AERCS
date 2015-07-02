@@ -1039,7 +1039,7 @@ public class ObjectQuery {
                 con.setConnection();
             }
             
-            String query = "select es.name, es.series_key from related_series rs inner join eventseries es on rs.series_id = es.id where rs.event_id = " + eventId;
+            String query = "select es.name, es.series_key, es.id from related_series rs inner join eventseries es on rs.series_id = es.id where rs.event_id = " + eventId;
 
             ResultSet rs = con.executeQuery(query);
             
@@ -1048,7 +1048,7 @@ public class ObjectQuery {
                 Media tmp = new Media();
                 tmp.setEventid(eventId);
                 tmp.setId(0);
-                tmp.setUrl("EventList.jsp?item=1&series="+rs.getString(2));
+                tmp.setUrl("EventList.html?series="+rs.getString(2)+"&item=1&id="+rs.getInt(3));
                 tmp.setUsername(null);
                 tmp.setTitle(rs.getString(1));
                 tmp.setSummary(null);
