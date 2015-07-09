@@ -17,6 +17,8 @@ import i5.las2peer.services.aercs.dbms.bdobjects.Media;
 import i5.las2peer.services.aercs.dbms.bdobjects.ObjectQuery;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
@@ -543,6 +545,122 @@ public class ServiceClass extends Service {
 			if(httpStatus == 200) {
 				content = jsa.toJSONString();
 			}
+		}
+		HttpResponse resp = new HttpResponse(content);
+		resp.setStatus(httpStatus);
+		return resp;
+	}
+
+	@GET
+	@Path("seriesComparison")
+	public HttpResponse selectedSeriesComparison(
+			@QueryParam(name="seriesType", defaultValue = "") String seriesType,
+			@QueryParam(name="selectedSeries", defaultValue = "") String selectedSeries,
+			@QueryParam(name="searchKeyword", defaultValue = "") String searchKeyword,
+			@QueryParam(name="typeOfSeriesSearchIn", defaultValue = "") String typeOfSeriesSearchIn,
+			@QueryParam(name="startChar", defaultValue = "A") String startChar){
+		int httpStatus = 200;
+		String content = new String();
+		
+		EventSeriesPeer es = new EventSeriesPeer();
+
+		JSONArray jsa = new JSONArray();
+		JSONObject jso = new JSONObject();
+        
+        ResultSet rs=null;
+        if(searchKeyword.equals("undefined"))
+        {
+            searchKeyword = "^^";
+        }
+        else
+        {
+            rs = es.searchSeries(searchKeyword, typeOfSeriesSearchIn);
+        }
+        
+        try {
+        	//leftdiv
+        	//id, name, abbreviation, series_key
+        	JSONArray jsa1 = new JSONArray();
+        	if(!searchKeyword.equals("^^")){
+				while (rs.next()) {
+					jso = new JSONObject();
+					jso.put("id", rs.getString(1));
+					jso.put("name", rs.getString(2));
+					jso.put("abbreviation", rs.getString(3));
+					jso.put("series_key", rs.getString(4));
+					jsa1.add(jso);
+				}
+				rs.getStatement().close();
+				rs.close();
+        	}
+			jsa.add(jsa1);
+
+			//rightdiv
+        	jsa1 = new JSONArray();
+        	if(!selectedSeries.equals("undefined"))
+            {
+        		try {
+					selectedSeries = URLDecoder.decode(selectedSeries, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+					httpStatus = 500;
+					content = "Decoding error";
+				}
+                StringTokenizer st1 = new StringTokenizer(selectedSeries , ",");
+                while (st1.hasMoreTokens()) 
+                {
+                    String seriesID=st1.nextToken(); 
+                    rs = es.getSeriesInfo(seriesID);
+                    while (rs.next()) 
+                    {
+                        String seriesName = rs.getString(2) + " (" + rs.getString(3).toUpperCase() + ")";
+                        String seriesKey = rs.getString(4);
+    					jso = new JSONObject();
+    					jso.put("seriesID", seriesID);
+    					jso.put("seriesName", seriesName);
+    					jso.put("seriesKey", seriesKey);
+    					jsa1.add(jso);
+                    }
+    				rs.getStatement().close();
+    				rs.close();
+                }
+            }
+			jsa.add(jsa1);
+			
+        	jsa1 = new JSONArray();
+        	//id, name, abbreviation, series_key
+            rs = es.selectConferences(startChar);
+            while(rs.next()){
+				jso = new JSONObject();
+				jso.put("id", rs.getString(1));
+				jso.put("name", rs.getString(2));
+				jso.put("abbreviation", rs.getString(3));
+				jso.put("series_key", rs.getString(4));
+				jsa1.add(jso);
+            }
+			jsa.add(jsa1);
+			
+			jsa1 = new JSONArray();
+        	//id, name, abbreviation, series_key
+            rs = es.selectJournals(startChar);
+            while(rs.next()){
+				jso = new JSONObject();
+				jso.put("id", rs.getString(1));
+				jso.put("name", rs.getString(2));
+				jso.put("abbreviation", rs.getString(3));
+				jso.put("series_key", rs.getString(4));
+				jsa1.add(jso);
+            }
+			jsa.add(jsa1);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			httpStatus = 500;
+			content = "A Database Error occured";
+		}
+		        
+		if(httpStatus == 200) {
+			content = jsa.toJSONString();
 		}
 		HttpResponse resp = new HttpResponse(content);
 		resp.setStatus(httpStatus);
