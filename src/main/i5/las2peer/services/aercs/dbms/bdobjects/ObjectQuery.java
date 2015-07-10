@@ -1,6 +1,7 @@
 package i5.las2peer.services.aercs.dbms.bdobjects;
 
 import i5.las2peer.services.aercs.dbms.dbconnection.DBConnection;
+import i5.las2peer.services.aercs.usermanager.EventSeries;
 
 import java.sql.ResultSet;
 import java.util.Vector;
@@ -71,73 +72,73 @@ public class ObjectQuery {
      * @return
      * @updated 20.09.2009 by Quan Tran
      */
-//    public Vector<EventSeries> searchEventByParticipant(String id)
-//    {
-//        try
-//        {
-//            if (con == null)
-//            {
-//                con = new DBConnection();
-//                con.setConnection();
-//            }
-//            
-//            //ResultSet rs =  con.executeQuery("select a.id, a.name, a.year, a.series_id, b.role, a.country from academicevent a, participate b where b.scientist_id="+id+" and a.id = b.event_id order by a.year desc");
-//            /*
-//            ResultSet rs =  con.executeQuery("select count(a.id) c, a.series_id, e.name, upper(e.abbreviation) from academicevent a, \n" + 
-//            "participate b, eventseries e where b.scientist_id="+id+" and a.id = b.event_id and a.series_id = e.id \n" + 
-//            "group by a.series_id, e.name, e.abbreviation \n" + 
-//            "order by c desc");
-//            System.out.println("select count(a.id) c, a.series_id, e.name, upper(e.abbreviation) from academicevent a, \n" + 
-//            "participate b, eventseries e where b.scientist_id="+id+" and a.id = b.event_id and a.series_id = e.id \n" + 
-//            "group by a.series_id, e.name, e.abbreviation \n" + 
-//            "order by c desc");
-//            */
-//            //rs.next();
-//            //return rs;
-//            //Vector<Event> tmp = new Vector<Event>();
-//            
-//            ResultSet rs =  con.executeQuery("select count (ev.id) c, es.id, es.name, es.name, upper(es.abbreviation), es.series_key " + 
-//            "from participate pa " + 
-//            "inner join proceeding_event pe on pa.proceeding_id = pe.proceeding_id " + 
-//            "inner join event ev on pe.event_id = ev.id " + 
-//            "inner join eventseries es on ev.series_id = es.id " + 
-//            "where pa.author_id = " + id + " " + 
-//            "group by es.id, es.name, es.abbreviation, es.series_key " + 
-//            "order by c desc");
-//
-//            System.out.println("select count (ev.id) c, es.id, es.name, es.name, upper(es.abbreviation), es.series_key " + 
-//            "from participate pa " + 
-//            "inner join proceeding_event pe on pa.proceeding_id = pe.proceeding_id " + 
-//            "inner join event ev on pe.event_id = ev.id " + 
-//            "inner join eventseries es on ev.series_id = es.id " + 
-//            "where pa.author_id = " + id + " " + 
-//            "group by es.id, es.name, es.abbreviation, es.series_key " + 
-//            "order by c desc");
-//             
-//            Vector<EventSeries> tmp = new Vector<EventSeries>();
-//
-//            while (rs.next())
-//            {
-//                //Event etmp = new Event(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(6),rs.getInt(5));
-//                EventSeries etmp = new EventSeries(rs.getInt(2), rs.getString(3), rs.getString(4), rs.getInt(1), rs.getString(6));
-//                if (!tmp.contains(etmp))
-//                {
-//                    tmp.add(etmp);
-//                }
-//            }
-//
-//            rs.getStatement().close();
-//            rs.close();
-//
-//            return tmp;
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
+    public Vector<EventSeries> searchEventByParticipant(String id)
+    {
+        try
+        {
+            if (con == null)
+            {
+                con = new DBConnection();
+                con.setConnection();
+            }
+            
+            //ResultSet rs =  con.executeQuery("select a.id, a.name, a.year, a.series_id, b.role, a.country from academicevent a, participate b where b.scientist_id="+id+" and a.id = b.event_id order by a.year desc");
+            /*
+            ResultSet rs =  con.executeQuery("select count(a.id) c, a.series_id, e.name, upper(e.abbreviation) from academicevent a, \n" + 
+            "participate b, eventseries e where b.scientist_id="+id+" and a.id = b.event_id and a.series_id = e.id \n" + 
+            "group by a.series_id, e.name, e.abbreviation \n" + 
+            "order by c desc");
+            System.out.println("select count(a.id) c, a.series_id, e.name, upper(e.abbreviation) from academicevent a, \n" + 
+            "participate b, eventseries e where b.scientist_id="+id+" and a.id = b.event_id and a.series_id = e.id \n" + 
+            "group by a.series_id, e.name, e.abbreviation \n" + 
+            "order by c desc");
+            */
+            //rs.next();
+            //return rs;
+            //Vector<Event> tmp = new Vector<Event>();
+            
+            ResultSet rs =  con.executeQuery("select count (ev.id) c, es.id, es.name, es.name, upper(es.abbreviation), es.series_key " + 
+            "from participate pa " + 
+            "inner join proceeding_event pe on pa.proceeding_id = pe.proceeding_id " + 
+            "inner join event ev on pe.event_id = ev.id " + 
+            "inner join eventseries es on ev.series_id = es.id " + 
+            "where pa.author_id = " + id + " " + 
+            "group by es.id, es.name, es.abbreviation, es.series_key " + 
+            "order by c desc");
+
+            System.out.println("select count (ev.id) c, es.id, es.name, es.name, upper(es.abbreviation), es.series_key " + 
+            "from participate pa " + 
+            "inner join proceeding_event pe on pa.proceeding_id = pe.proceeding_id " + 
+            "inner join event ev on pe.event_id = ev.id " + 
+            "inner join eventseries es on ev.series_id = es.id " + 
+            "where pa.author_id = " + id + " " + 
+            "group by es.id, es.name, es.abbreviation, es.series_key " + 
+            "order by c desc");
+             
+            Vector<EventSeries> tmp = new Vector<EventSeries>();
+
+            while (rs.next())
+            {
+                //Event etmp = new Event(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(6),rs.getInt(5));
+                EventSeries etmp = new EventSeries(rs.getInt(2), rs.getString(3), rs.getString(4), rs.getInt(1), rs.getString(6));
+                if (!tmp.contains(etmp))
+                {
+                    tmp.add(etmp);
+                }
+            }
+
+            rs.getStatement().close();
+            rs.close();
+
+            return tmp;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 //
 //    public Vector<Event> searchEventByTopic(String topicid){
 //        try{

@@ -12,9 +12,11 @@ import i5.las2peer.restMapper.annotations.Version;
 import i5.las2peer.restMapper.tools.ValidationResult;
 import i5.las2peer.restMapper.tools.XMLCheck;
 import i5.las2peer.security.UserAgent;
+import i5.las2peer.services.aercs.dbms.bdobjects.AuthorNamePeer;
 import i5.las2peer.services.aercs.dbms.bdobjects.EventSeriesPeer;
 import i5.las2peer.services.aercs.dbms.bdobjects.Media;
 import i5.las2peer.services.aercs.dbms.bdobjects.ObjectQuery;
+import i5.las2peer.services.aercs.usermanager.EventSeries;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -437,6 +439,83 @@ public class ServiceClass extends Service {
 	}
 	
 	@GET
+	@Path("person")
+	public HttpResponse selectPerson(
+			@QueryParam(name="id", defaultValue = "") String id,
+			@QueryParam(name="key", defaultValue = "") String key){
+		int httpStatus = 200;
+		String content = new String();
+		
+	    if (id == ""){
+	        AuthorNamePeer anp = new AuthorNamePeer();
+	        id = anp.getIdFromKey(key);
+	    }
+	    else{
+	        AuthorNamePeer anp = new AuthorNamePeer();
+	        key = anp.getKeyFromId(id);
+	    }
+
+		ObjectQuery series = new ObjectQuery();
+		// id, name
+	    ResultSet rs = series.searchPerson(id);
+	    
+	    // u.url, u.description
+	    ResultSet rs1 = series.searchPersonUrl(id);
+	    Vector<EventSeries> events = series.searchEventByParticipant(id) ;
+			    
+		JSONArray jsa = new JSONArray();
+	    try {
+			JSONArray jsa1 = new JSONArray();
+			if (rs.next()) {
+				JSONObject jso = new JSONObject();
+				jso.put("id", rs.getString(1));
+				jso.put("name", rs.getString(2));
+				jsa1.add(jso);
+			}
+			jsa.add(jsa1);
+			rs.getStatement().close();
+			rs.close();
+			
+			jsa1 = new JSONArray();
+			while(rs1.next()){
+				JSONObject jso = new JSONObject();
+				jso.put("url", rs1.getString(1));
+				jso.put("description", rs1.getString(2));
+				jsa1.add(jso);
+			}
+			jsa.add(jsa1);
+			rs1.getStatement().close();
+			rs1.close();
+			
+			jsa1 = new JSONArray();
+			for(int i=0; i<events.size();i++){
+				JSONObject jso = new JSONObject();
+				jso.put("id", events.get(i).getId());
+				jso.put("name", events.get(i).getName());
+				jso.put("abbr", events.get(i).getAbbreviation());
+				jso.put("part_no", events.get(i).getParticipantNo());
+				jso.put("event_no", events.get(i).getEventNo());
+				jso.put("key", events.get(i).getKey());
+				jsa1.add(jso);
+			}
+			jsa.add(jsa1);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			httpStatus = 500;
+			content = "A Database Error occured";
+		}
+
+		if(httpStatus == 200) {
+			content = jsa.toJSONString();
+		}
+		
+		HttpResponse resp = new HttpResponse(content);
+		resp.setStatus(httpStatus);
+		return resp;
+	}
+	
+	@GET
 	@Path("ranking")
 	public HttpResponse getRanking(
 			@QueryParam(name="conf", defaultValue = "-1") Integer conf,
@@ -661,6 +740,113 @@ public class ServiceClass extends Service {
 		        
 		if(httpStatus == 200) {
 			content = jsa.toJSONString();
+		}
+		HttpResponse resp = new HttpResponse(content);
+		resp.setStatus(httpStatus);
+		return resp;
+	}
+	
+	@GET
+	@Path("search")
+	public HttpResponse searchResults(
+			@QueryParam(name="searchdata", defaultValue="") String searchdata,
+			@QueryParam(name="searchfield", defaultValue="1") String searchfield,
+			@QueryParam(name="page", defaultValue="1") String page){
+		int httpStatus = 200;
+		String content = new String();
+		if(searchdata.length() == 0) {
+			httpStatus = 400;
+			content = "searchdata length must be bigger than 0";
+		}
+		else {
+		    int resultPerPage = 25;
+		    int resultNum = 0;
+		    int currentPage = Integer.parseInt(page);
+		    
+		    int fromRow = (currentPage - 1) * resultPerPage + 1;
+		    int toRow = fromRow + resultPerPage - 1;
+		    
+            ObjectQuery series = new ObjectQuery();
+		    ResultSet rs = null;
+            JSONArray jsa = new JSONArray();
+
+		    if (searchfield.equals("1"))
+		    {
+	            resultNum = series.countPerson(searchdata);
+				JSONObject jso = new JSONObject();
+				jso.put("resultNum", resultNum);
+				jsa.add(jso);
+
+	            // a_key, a_name, a_p_num
+	            rs = series.queryPerson(searchdata, fromRow, toRow);
+				try {
+					while (rs.next()) {
+						jso = new JSONObject();
+						jso.put("key", rs.getString(1));
+						jso.put("name", rs.getString(2));
+						jso.put("p_num", rs.getInt(3));
+						jsa.add(jso);
+					}
+					rs.getStatement().close();
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					httpStatus = 500;
+					content = "A Database Error occured";
+				} 
+		    }
+		    else if(searchfield.equals("2")){
+		    	resultNum = series.countEvent(searchdata);
+				JSONObject jso = new JSONObject();
+				jso.put("resultNum", resultNum);
+				jsa.add(jso);
+
+		    	// ev_id, ev_name, ev_series_key, ev_author_num
+	            rs = series.queryEvent(searchdata, fromRow, toRow);
+	            try {
+					while (rs.next()) {
+						jso = new JSONObject();
+						jso.put("id", rs.getInt(1));
+						jso.put("name", rs.getString(2));
+						jso.put("series_key", rs.getString(3));
+						jso.put("author_num", rs.getInt(4));
+						jsa.add(jso);
+					}
+					rs.getStatement().close();
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					httpStatus = 500;
+					content = "A Database Error occured";
+				} 
+		    }
+		    else if(searchfield.equals("3")){
+	            resultNum = series.countSeries(searchdata);
+				JSONObject jso = new JSONObject();
+				jso.put("resultNum", resultNum);
+				jsa.add(jso);
+
+	            // id, name, series_key
+	            rs = series.searchSeries(searchdata, fromRow, toRow);
+	            try {
+					while (rs.next()) {
+						jso = new JSONObject();
+						jso.put("id", rs.getInt(1));
+						jso.put("name", rs.getString(2));
+						jso.put("series_key", rs.getString(3));
+						jsa.add(jso);
+					}
+					rs.getStatement().close();
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					httpStatus = 500;
+					content = "A Database Error occured";
+				} 
+		    }
+			if(httpStatus == 200) {
+				content = jsa.toJSONString();
+			}
 		}
 		HttpResponse resp = new HttpResponse(content);
 		resp.setStatus(httpStatus);
