@@ -4,8 +4,11 @@ import i5.las2peer.api.Service;
 import i5.las2peer.restMapper.HttpResponse;
 import i5.las2peer.restMapper.MediaType;
 import i5.las2peer.restMapper.RESTMapper;
+import i5.las2peer.restMapper.annotations.ContentParam;
 import i5.las2peer.restMapper.annotations.GET;
+import i5.las2peer.restMapper.annotations.POST;
 import i5.las2peer.restMapper.annotations.Path;
+import i5.las2peer.restMapper.annotations.PathParam;
 import i5.las2peer.restMapper.annotations.Produces;
 import i5.las2peer.restMapper.annotations.QueryParam;
 import i5.las2peer.restMapper.annotations.Version;
@@ -692,10 +695,11 @@ public class ServiceClass extends Service {
                     rs = es.getSeriesInfo(seriesID);
                     while (rs.next()) 
                     {
+                        String seriesId = rs.getString(1);
                         String seriesName = rs.getString(2) + " (" + rs.getString(3).toUpperCase() + ")";
                         String seriesKey = rs.getString(4);
     					jso = new JSONObject();
-    					jso.put("seriesID", seriesID);
+    					jso.put("seriesID", seriesId);
     					jso.put("seriesName", seriesName);
     					jso.put("seriesKey", seriesKey);
     					jsa1.add(jso);
@@ -847,6 +851,79 @@ public class ServiceClass extends Service {
 			if(httpStatus == 200) {
 				content = jsa.toJSONString();
 			}
+		}
+		HttpResponse resp = new HttpResponse(content);
+		resp.setStatus(httpStatus);
+		return resp;
+	}
+	
+	@GET
+	@Path("drawSeriesComparison")
+	public HttpResponse drawSeriesComparison(
+			@QueryParam(name="selectedSeriesData", defaultValue = "") String selectedSeriesData,
+			@QueryParam(name="chartType", defaultValue = "") String chartType){
+		int httpStatus = 200;
+		String content = new String();
+		
+		try {
+			selectedSeriesData = URLDecoder.decode(selectedSeriesData, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			httpStatus = 500;
+			content = "Decoding error";
+		}
+		
+		EventSeriesPeer es = new EventSeriesPeer();
+        StringTokenizer seriesTokens = new StringTokenizer(selectedSeriesData, ",");
+        int totalCounts = seriesTokens.countTokens();
+
+        String selectedSeries[][] = new String[totalCounts][2];
+        int counter=0;     
+		JSONArray jsa = new JSONArray();
+		JSONObject jso = new JSONObject();
+		try{
+	        while(seriesTokens.hasMoreTokens()) 
+	        {
+                String seriesID = seriesTokens.nextToken();                    //Series ID
+                selectedSeries[counter][0] = seriesID;
+                ResultSet rs = es.getSeriesInfo(seriesID);
+                                                                        
+                while (rs.next()) 
+                {
+                    String seriesName = rs.getString(2) + " (" + rs.getString(3).toUpperCase() + ")";   
+                    selectedSeries[counter][1] = seriesName;                //Series Name
+                }
+                rs.getStatement().close();
+                rs.close();
+                counter++;
+	        }
+	        jso.put("selectedSeries", selectedSeries);
+	        jsa.add(jso);
+	        
+	        String color[] = new String[selectedSeries.length];
+	        float dx = 1.0f / (float) (color.length - 1);
+	        for (int i = 0; i < color.length; i++) 
+	        {
+	            String rgb = Integer.toHexString((es.getColor(i * dx)).getRGB());
+	            color[i] = rgb.substring(2, rgb.length());
+	        }
+	        String url[] = es.createGoogleURL(selectedSeries, chartType, color, true);
+	
+	        jso = new JSONObject();
+	        jso.put("colors", color);
+	        jsa.add(jso);
+	        jso = new JSONObject();
+	        jso.put("urls", url);
+	        jsa.add(jso);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			httpStatus = 500;
+			content = "A Database Error occured";
+		}
+		        
+		if(httpStatus == 200) {
+			content = jsa.toJSONString();
 		}
 		HttpResponse resp = new HttpResponse(content);
 		resp.setStatus(httpStatus);
