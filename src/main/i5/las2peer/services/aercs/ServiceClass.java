@@ -206,26 +206,22 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("events")
 	public HttpResponse selectEvents(
-			@QueryParam(name="series", defaultValue = "") String series,
-			@QueryParam(name="id", defaultValue = "-1") String id,
+			@QueryParam(name="id", defaultValue = "") String id,
 			@QueryParam(name="item", defaultValue = "1") String item){
 		int httpStatus = 200;
 		String content = new String();
-		if(series.length() == 0) {
-			httpStatus = 400;
-			content = "series should not be empty";
-		}
-		else if(id.equals("-1")) {
+		JSONArray jsa = new JSONArray();
+
+		if(id.equals("")){
 			httpStatus = 400;
 			content = "id should not be empty";
 		}
-		else {
+		else{
 			EventSeriesPeer es = new EventSeriesPeer();
 			ObjectQuery events = new ObjectQuery();
 			String seriesName = events.querySSeries(id);
             String newID = events.querySeriesNewestYear(id);
 
-			JSONArray jsa = new JSONArray();
 			JSONObject jso_name = new JSONObject();
 			jso_name.put("series_name", seriesName);
 			jsa.add(jso_name);
@@ -280,31 +276,33 @@ public class ServiceClass extends Service {
 					content = "A Database Error occured";
 				}
 			}
-			if(httpStatus == 200) {
-				content = jsa.toJSONString();
-			}
+		}
+			
+		if(httpStatus == 200) {
+			content = jsa.toJSONString();
 		}
 		HttpResponse resp = new HttpResponse(content);
 		resp.setStatus(httpStatus);
 		return resp;
 	}
-	
+
 	/*
 	 * Returns all conferences whose name begin with startChar.
 	 */
 	@GET
 	@Path("seriesCharts")
 	public HttpResponse getChartUrls(
-			@QueryParam(name="id", defaultValue="-1") String id){
+			@QueryParam(name="id", defaultValue="") String id){
 		int httpStatus = 200;
 		String content = new String();
-		if(id == "-1") {
+		JSONArray jsa = new JSONArray();
+
+		if(id.equals("")){
 			httpStatus = 400;
-			content = "Id must be given";
+			content = "id should not be empty";
 		}
-		else {
+		else{			
 			EventSeriesPeer es = new EventSeriesPeer();
-			JSONArray jsa = new JSONArray();
 			try {			    
 			    String color1[] = {"0000FF"};
 			    ResultSet rs1 = es.queryDevelopmentChart(id);
@@ -379,9 +377,10 @@ public class ServiceClass extends Service {
 				httpStatus = 500;
 				content = "A Database Error occured";
 			}
-			if(httpStatus == 200) {
-				content = jsa.toJSONString();
-			}
+		}
+		
+		if(httpStatus == 200) {
+			content = jsa.toJSONString();
 		}
 		HttpResponse resp = new HttpResponse(content);
 		resp.setStatus(httpStatus);
@@ -394,20 +393,20 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("event")
 	public HttpResponse selectEvent(
-			@QueryParam(name="id", defaultValue = "-1") String id){
+			@QueryParam(name="id", defaultValue = "") String id){
 		int httpStatus = 200;
 		String content = new String();
-		if(id.equals("-1")) {
+		JSONArray jsa = new JSONArray();
+
+		if(id.equals("")){
 			httpStatus = 400;
 			content = "id should not be empty";
 		}
-		else {
+		else{
 			ObjectQuery events = new ObjectQuery();
 			
 			// id, name, country, year, series_id
-		    ResultSet rs = events.searchEvent(id);
-		    
-			JSONArray jsa = new JSONArray();
+		    ResultSet rs = events.searchEvent(id);		    
 		    try {
 				if (rs.next()) {
 					JSONObject jso = new JSONObject();
@@ -431,10 +430,10 @@ public class ServiceClass extends Service {
 
 		    jsa.add(relatedSeries);
 		    jsa.add(urls);
-
-			if(httpStatus == 200) {
-				content = jsa.toJSONString();
-			}
+		}
+		
+		if(httpStatus == 200) {
+			content = jsa.toJSONString();
 		}
 		HttpResponse resp = new HttpResponse(content);
 		resp.setStatus(httpStatus);
@@ -448,65 +447,67 @@ public class ServiceClass extends Service {
 			@QueryParam(name="key", defaultValue = "") String key){
 		int httpStatus = 200;
 		String content = new String();
-		
-	    if (id == ""){
-	        AuthorNamePeer anp = new AuthorNamePeer();
-	        id = anp.getIdFromKey(key);
-	    }
-	    else{
-	        AuthorNamePeer anp = new AuthorNamePeer();
-	        key = anp.getKeyFromId(id);
-	    }
-
-		ObjectQuery series = new ObjectQuery();
-		// id, name
-	    ResultSet rs = series.searchPerson(id);
-	    
-	    // u.url, u.description
-	    ResultSet rs1 = series.searchPersonUrl(id);
-	    Vector<EventSeries> events = series.searchEventByParticipant(id) ;
-			    
 		JSONArray jsa = new JSONArray();
-	    try {
-			JSONArray jsa1 = new JSONArray();
-			if (rs.next()) {
-				JSONObject jso = new JSONObject();
-				jso.put("id", rs.getString(1));
-				jso.put("name", rs.getString(2));
-				jsa1.add(jso);
-			}
-			jsa.add(jsa1);
-			rs.getStatement().close();
-			rs.close();
-			
-			jsa1 = new JSONArray();
-			while(rs1.next()){
-				JSONObject jso = new JSONObject();
-				jso.put("url", rs1.getString(1));
-				jso.put("description", rs1.getString(2));
-				jsa1.add(jso);
-			}
-			jsa.add(jsa1);
-			rs1.getStatement().close();
-			rs1.close();
-			
-			jsa1 = new JSONArray();
-			for(int i=0; i<events.size();i++){
-				JSONObject jso = new JSONObject();
-				jso.put("id", events.get(i).getId());
-				jso.put("name", events.get(i).getName());
-				jso.put("abbr", events.get(i).getAbbreviation());
-				jso.put("part_no", events.get(i).getParticipantNo());
-				jso.put("event_no", events.get(i).getEventNo());
-				jso.put("key", events.get(i).getKey());
-				jsa1.add(jso);
-			}
-			jsa.add(jsa1);
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			httpStatus = 500;
-			content = "A Database Error occured";
+		if(id.equals("") && key.equals("")){
+			httpStatus = 400;
+			content = "id or key should be provided";
+		}
+		else{
+		    if (id == ""){
+		        AuthorNamePeer anp = new AuthorNamePeer();
+		        id = anp.getIdFromKey(key);
+		    }
+	
+			ObjectQuery series = new ObjectQuery();
+			// id, name
+		    ResultSet rs = series.searchPerson(id);
+		    
+		    // u.url, u.description
+		    ResultSet rs1 = series.searchPersonUrl(id);
+		    Vector<EventSeries> events = series.searchEventByParticipant(id) ;
+				    
+		    try {
+				JSONArray jsa1 = new JSONArray();
+				if (rs.next()) {
+					JSONObject jso = new JSONObject();
+					jso.put("id", rs.getString(1));
+					jso.put("name", rs.getString(2));
+					jsa1.add(jso);
+				}
+				jsa.add(jsa1);
+				rs.getStatement().close();
+				rs.close();
+				
+				jsa1 = new JSONArray();
+				while(rs1.next()){
+					JSONObject jso = new JSONObject();
+					jso.put("url", rs1.getString(1));
+					jso.put("description", rs1.getString(2));
+					jsa1.add(jso);
+				}
+				jsa.add(jsa1);
+				rs1.getStatement().close();
+				rs1.close();
+				
+				jsa1 = new JSONArray();
+				for(int i=0; i<events.size();i++){
+					JSONObject jso = new JSONObject();
+					jso.put("id", events.get(i).getId());
+					jso.put("name", events.get(i).getName());
+					jso.put("abbr", events.get(i).getAbbreviation());
+					jso.put("part_no", events.get(i).getParticipantNo());
+					jso.put("event_no", events.get(i).getEventNo());
+					jso.put("key", events.get(i).getKey());
+					jsa1.add(jso);
+				}
+				jsa.add(jsa1);
+	
+			} catch (SQLException e) {
+				e.printStackTrace();
+				httpStatus = 500;
+				content = "A Database Error occured";
+			}
 		}
 
 		if(httpStatus == 200) {
@@ -521,15 +522,17 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("ranking")
 	public HttpResponse getRanking(
-			@QueryParam(name="conf", defaultValue = "-1") Integer conf,
-			@QueryParam(name="journal", defaultValue = "-1") Integer journal,
-			@QueryParam(name="domain", defaultValue = "-1") Integer domain,
-			@QueryParam(name="page", defaultValue = "-1") Integer page,
-			@QueryParam(name="col", defaultValue = "-1") Integer col,
-			@QueryParam(name="order", defaultValue = "-1") Integer order){
+			@QueryParam(name="conf", defaultValue = "0") Integer conf,
+			@QueryParam(name="journal", defaultValue = "0") Integer journal,
+			@QueryParam(name="domain", defaultValue = "0") Integer domain,
+			@QueryParam(name="page", defaultValue = "1") Integer page,
+			@QueryParam(name="col", defaultValue = "5") Integer col,
+			@QueryParam(name="order", defaultValue = "0") Integer order){
 		int httpStatus = 200;
 		String content = new String();
-		if(conf.equals("-1") || journal.equals("-1") || domain.equals("-1") || page.equals("-1") || col.equals("-1") || order.equals("-1")) {
+		JSONArray jsa = new JSONArray();
+
+		if(conf.equals("") || journal.equals("") || domain.equals("") || page.equals("") || col.equals("") || order.equals("")) {
 			httpStatus = 400;
 			content = "missing argument";
 		}
@@ -572,7 +575,6 @@ public class ServiceClass extends Service {
 		    // id, name
 		    ResultSet domainRs = es.getDomains();
 
-			JSONArray jsa = new JSONArray();
 			JSONObject jso = new JSONObject();
 			JSONArray jsa1 = new JSONArray();
 			jso.put("resultNum", resultNum);
@@ -602,31 +604,33 @@ public class ServiceClass extends Service {
 				domainRs.close();
 
 				jsa1 = new JSONArray();
-				while (rs.next()) {
-					jso = new JSONObject();
-					jso.put("id", rs.getString(1));
-					jso.put("name", rs.getString(2));
-					jso.put("abbr", rs.getString(3));
-					jso.put("series_key", rs.getString(4));
-					jso.put("bn", rs.getInt(5));
-					jso.put("pr", rs.getInt(6));
-					jso.put("au", rs.getInt(7));
-					jso.put("hu", rs.getInt(8));
-					jsa1.add(jso);
+				if(rs!=null){
+					while (rs.next()) {
+						jso = new JSONObject();
+						jso.put("id", rs.getString(1));
+						jso.put("name", rs.getString(2));
+						jso.put("abbr", rs.getString(3));
+						jso.put("series_key", rs.getString(4));
+						jso.put("bn", rs.getInt(5));
+						jso.put("pr", rs.getInt(6));
+						jso.put("au", rs.getInt(7));
+						jso.put("hu", rs.getInt(8));
+						jsa1.add(jso);
+					}
+					rs.getStatement().close();
+					rs.close();
 				}
 				jsa.add(jsa1);
-				rs.getStatement().close();
-				rs.close();
 
 			} catch (SQLException e) {
 				e.printStackTrace();
 				httpStatus = 500;
 				content = "A Database Error occured";
 			}
-
-			if(httpStatus == 200) {
-				content = jsa.toJSONString();
-			}
+		}
+		
+		if(httpStatus == 200) {
+			content = jsa.toJSONString();
 		}
 		HttpResponse resp = new HttpResponse(content);
 		resp.setStatus(httpStatus);
@@ -636,112 +640,111 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("seriesComparison")
 	public HttpResponse selectedSeriesComparison(
-			@QueryParam(name="seriesType", defaultValue = "") String seriesType,
 			@QueryParam(name="selectedSeries", defaultValue = "") String selectedSeries,
 			@QueryParam(name="searchKeyword", defaultValue = "") String searchKeyword,
-			@QueryParam(name="typeOfSeriesSearchIn", defaultValue = "") String typeOfSeriesSearchIn,
+			@QueryParam(name="typeOfSeriesSearchIn", defaultValue = "both") String typeOfSeriesSearchIn,
 			@QueryParam(name="startChar", defaultValue = "A") String startChar){
 		int httpStatus = 200;
 		String content = new String();
-		
-		EventSeriesPeer es = new EventSeriesPeer();
-
 		JSONArray jsa = new JSONArray();
-		JSONObject jso = new JSONObject();
-        
-        ResultSet rs=null;
-        if(searchKeyword.equals("undefined"))
-        {
-            searchKeyword = "^^";
-        }
-        else
-        {
-            rs = es.searchSeries(searchKeyword, typeOfSeriesSearchIn);
-        }
-        
-        try {
-        	//leftdiv
-        	//id, name, abbreviation, series_key
-        	JSONArray jsa1 = new JSONArray();
-        	if(!searchKeyword.equals("^^")){
-				while (rs.next()) {
+
+		if(startChar.length() != 1) {
+			httpStatus = 400;
+			content = "startChar must be of length 1";
+		}
+		else if(!searchKeyword.equals("^^") &&
+				(!typeOfSeriesSearchIn.equals("both") && !typeOfSeriesSearchIn.equals("conferences") && !typeOfSeriesSearchIn.equals("journals"))){
+				httpStatus = 400;
+				content = "typeOfSeriesSearchIn should be one among: both, conferences or journals";
+		}
+		else{
+	        try {
+	    		JSONObject jso = new JSONObject();
+	    		EventSeriesPeer es = new EventSeriesPeer();
+	            ResultSet rs=null;
+	        	//leftdiv
+	        	//id, name, abbreviation, series_key
+	        	JSONArray jsa1 = new JSONArray();
+	        	if(!searchKeyword.equals("^^")){
+	                rs = es.searchSeries(searchKeyword, typeOfSeriesSearchIn);
+					while (rs.next()) {
+						jso = new JSONObject();
+						jso.put("id", rs.getString(1));
+						jso.put("name", rs.getString(2));
+						jso.put("abbreviation", rs.getString(3));
+						jso.put("series_key", rs.getString(4));
+						jsa1.add(jso);
+					}
+					rs.getStatement().close();
+					rs.close();
+	        	}
+				jsa.add(jsa1);
+	
+				//rightdiv
+	        	jsa1 = new JSONArray();
+	        	if(!selectedSeries.equals(""))
+	            {
+	        		try {
+						selectedSeries = URLDecoder.decode(selectedSeries, "UTF-8");
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+						httpStatus = 500;
+						content = "Decoding error";
+					}
+	                StringTokenizer st1 = new StringTokenizer(selectedSeries , ",");
+	                while (st1.hasMoreTokens()) 
+	                {
+	                    String seriesID=st1.nextToken(); 
+	                    rs = es.getSeriesInfo(seriesID);
+	                    while (rs.next()) 
+	                    {
+	                        String seriesId = rs.getString(1);
+	                        String seriesName = rs.getString(2) + " (" + rs.getString(3).toUpperCase() + ")";
+	                        String seriesKey = rs.getString(4);
+	    					jso = new JSONObject();
+	    					jso.put("seriesID", seriesId);
+	    					jso.put("seriesName", seriesName);
+	    					jso.put("seriesKey", seriesKey);
+	    					jsa1.add(jso);
+	                    }
+	    				rs.getStatement().close();
+	    				rs.close();
+	                }
+	            }
+				jsa.add(jsa1);
+				
+	        	jsa1 = new JSONArray();
+	        	//id, name, abbreviation, series_key
+	            rs = es.selectConferences(startChar);
+	            while(rs.next()){
 					jso = new JSONObject();
 					jso.put("id", rs.getString(1));
 					jso.put("name", rs.getString(2));
 					jso.put("abbreviation", rs.getString(3));
 					jso.put("series_key", rs.getString(4));
 					jsa1.add(jso);
-				}
-				rs.getStatement().close();
-				rs.close();
-        	}
-			jsa.add(jsa1);
-
-			//rightdiv
-        	jsa1 = new JSONArray();
-        	if(!selectedSeries.equals("undefined"))
-            {
-        		try {
-					selectedSeries = URLDecoder.decode(selectedSeries, "UTF-8");
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-					httpStatus = 500;
-					content = "Decoding error";
-				}
-                StringTokenizer st1 = new StringTokenizer(selectedSeries , ",");
-                while (st1.hasMoreTokens()) 
-                {
-                    String seriesID=st1.nextToken(); 
-                    rs = es.getSeriesInfo(seriesID);
-                    while (rs.next()) 
-                    {
-                        String seriesId = rs.getString(1);
-                        String seriesName = rs.getString(2) + " (" + rs.getString(3).toUpperCase() + ")";
-                        String seriesKey = rs.getString(4);
-    					jso = new JSONObject();
-    					jso.put("seriesID", seriesId);
-    					jso.put("seriesName", seriesName);
-    					jso.put("seriesKey", seriesKey);
-    					jsa1.add(jso);
-                    }
-    				rs.getStatement().close();
-    				rs.close();
-                }
-            }
-			jsa.add(jsa1);
-			
-        	jsa1 = new JSONArray();
-        	//id, name, abbreviation, series_key
-            rs = es.selectConferences(startChar);
-            while(rs.next()){
-				jso = new JSONObject();
-				jso.put("id", rs.getString(1));
-				jso.put("name", rs.getString(2));
-				jso.put("abbreviation", rs.getString(3));
-				jso.put("series_key", rs.getString(4));
-				jsa1.add(jso);
-            }
-			jsa.add(jsa1);
-			
-			jsa1 = new JSONArray();
-        	//id, name, abbreviation, series_key
-            rs = es.selectJournals(startChar);
-            while(rs.next()){
-				jso = new JSONObject();
-				jso.put("id", rs.getString(1));
-				jso.put("name", rs.getString(2));
-				jso.put("abbreviation", rs.getString(3));
-				jso.put("series_key", rs.getString(4));
-				jsa1.add(jso);
-            }
-			jsa.add(jsa1);
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			httpStatus = 500;
-			content = "A Database Error occured";
+	            }
+				jsa.add(jsa1);
+				
+				jsa1 = new JSONArray();
+	        	//id, name, abbreviation, series_key
+	            rs = es.selectJournals(startChar);
+	            while(rs.next()){
+					jso = new JSONObject();
+					jso.put("id", rs.getString(1));
+					jso.put("name", rs.getString(2));
+					jso.put("abbreviation", rs.getString(3));
+					jso.put("series_key", rs.getString(4));
+					jsa1.add(jso);
+	            }
+				jsa.add(jsa1);
+	
+			} catch (SQLException e) {
+				e.printStackTrace();
+				httpStatus = 500;
+				content = "A Database Error occured";
+			}
 		}
-		        
 		if(httpStatus == 200) {
 			content = jsa.toJSONString();
 		}
@@ -758,99 +761,94 @@ public class ServiceClass extends Service {
 			@QueryParam(name="page", defaultValue="1") String page){
 		int httpStatus = 200;
 		String content = new String();
-		if(searchdata.length() == 0) {
-			httpStatus = 400;
-			content = "searchdata length must be bigger than 0";
-		}
-		else {
-		    int resultPerPage = 25;
-		    int resultNum = 0;
-		    int currentPage = Integer.parseInt(page);
-		    
-		    int fromRow = (currentPage - 1) * resultPerPage + 1;
-		    int toRow = fromRow + resultPerPage - 1;
-		    
-            ObjectQuery series = new ObjectQuery();
-		    ResultSet rs = null;
-            JSONArray jsa = new JSONArray();
 
-		    if (searchfield.equals("1"))
-		    {
-	            resultNum = series.countPerson(searchdata);
-				JSONObject jso = new JSONObject();
-				jso.put("resultNum", resultNum);
-				jsa.add(jso);
+	    int resultPerPage = 25;
+	    int resultNum = 0;
+	    int currentPage = Integer.parseInt(page);
+	    
+	    int fromRow = (currentPage - 1) * resultPerPage + 1;
+	    int toRow = fromRow + resultPerPage - 1;
+	    
+        ObjectQuery series = new ObjectQuery();
+	    ResultSet rs = null;
+        JSONArray jsa = new JSONArray();
 
-	            // a_key, a_name, a_p_num
-	            rs = series.queryPerson(searchdata, fromRow, toRow);
-				try {
-					while (rs.next()) {
-						jso = new JSONObject();
-						jso.put("key", rs.getString(1));
-						jso.put("name", rs.getString(2));
-						jso.put("p_num", rs.getInt(3));
-						jsa.add(jso);
-					}
-					rs.getStatement().close();
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-					httpStatus = 500;
-					content = "A Database Error occured";
-				} 
-		    }
-		    else if(searchfield.equals("2")){
-		    	resultNum = series.countEvent(searchdata);
-				JSONObject jso = new JSONObject();
-				jso.put("resultNum", resultNum);
-				jsa.add(jso);
+	    if (searchfield.equals("1"))
+	    {
+            resultNum = series.countPerson(searchdata);
+			JSONObject jso = new JSONObject();
+			jso.put("resultNum", resultNum);
+			jsa.add(jso);
 
-		    	// ev_id, ev_name, ev_series_key, ev_author_num
-	            rs = series.queryEvent(searchdata, fromRow, toRow);
-	            try {
-					while (rs.next()) {
-						jso = new JSONObject();
-						jso.put("id", rs.getInt(1));
-						jso.put("name", rs.getString(2));
-						jso.put("series_key", rs.getString(3));
-						jso.put("author_num", rs.getInt(4));
-						jsa.add(jso);
-					}
-					rs.getStatement().close();
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-					httpStatus = 500;
-					content = "A Database Error occured";
-				} 
-		    }
-		    else if(searchfield.equals("3")){
-	            resultNum = series.countSeries(searchdata);
-				JSONObject jso = new JSONObject();
-				jso.put("resultNum", resultNum);
-				jsa.add(jso);
+            // a_key, a_name, a_p_num
+            rs = series.queryPerson(searchdata, fromRow, toRow);
+			try {
+				while (rs.next()) {
+					jso = new JSONObject();
+					jso.put("key", rs.getString(1));
+					jso.put("name", rs.getString(2));
+					jso.put("p_num", rs.getInt(3));
+					jsa.add(jso);
+				}
+				rs.getStatement().close();
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				httpStatus = 500;
+				content = "A Database Error occured";
+			} 
+	    }
+	    else if(searchfield.equals("2")){
+	    	resultNum = series.countEvent(searchdata);
+			JSONObject jso = new JSONObject();
+			jso.put("resultNum", resultNum);
+			jsa.add(jso);
 
-	            // id, name, series_key
-	            rs = series.searchSeries(searchdata, fromRow, toRow);
-	            try {
-					while (rs.next()) {
-						jso = new JSONObject();
-						jso.put("id", rs.getInt(1));
-						jso.put("name", rs.getString(2));
-						jso.put("series_key", rs.getString(3));
-						jsa.add(jso);
-					}
-					rs.getStatement().close();
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-					httpStatus = 500;
-					content = "A Database Error occured";
-				} 
-		    }
-			if(httpStatus == 200) {
-				content = jsa.toJSONString();
-			}
+	    	// ev_id, ev_name, ev_series_key, ev_author_num
+            rs = series.queryEvent(searchdata, fromRow, toRow);
+            try {
+				while (rs.next()) {
+					jso = new JSONObject();
+					jso.put("id", rs.getInt(1));
+					jso.put("name", rs.getString(2));
+					jso.put("series_key", rs.getString(3));
+					jso.put("author_num", rs.getInt(4));
+					jsa.add(jso);
+				}
+				rs.getStatement().close();
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				httpStatus = 500;
+				content = "A Database Error occured";
+			} 
+	    }
+	    else if(searchfield.equals("3")){
+            resultNum = series.countSeries(searchdata);
+			JSONObject jso = new JSONObject();
+			jso.put("resultNum", resultNum);
+			jsa.add(jso);
+
+            // id, name, series_key
+            rs = series.searchSeries(searchdata, fromRow, toRow);
+            try {
+				while (rs.next()) {
+					jso = new JSONObject();
+					jso.put("id", rs.getInt(1));
+					jso.put("name", rs.getString(2));
+					jso.put("series_key", rs.getString(3));
+					jsa.add(jso);
+				}
+				rs.getStatement().close();
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				httpStatus = 500;
+				content = "A Database Error occured";
+			} 
+	    }
+		if(httpStatus == 200) {
+			content = jsa.toJSONString();
 		}
 		HttpResponse resp = new HttpResponse(content);
 		resp.setStatus(httpStatus);
@@ -929,4 +927,5 @@ public class ServiceClass extends Service {
 		resp.setStatus(httpStatus);
 		return resp;
 	}
+	
 }
