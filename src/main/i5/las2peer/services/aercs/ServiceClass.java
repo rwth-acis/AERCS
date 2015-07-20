@@ -468,20 +468,18 @@ public class ServiceClass extends Service {
 		    Vector<EventSeries> events = series.searchEventByParticipant(id) ;
 				    
 		    try {
-				JSONArray jsa1 = new JSONArray();
+				JSONObject jso = new JSONObject();
 				if (rs.next()) {
-					JSONObject jso = new JSONObject();
 					jso.put("id", rs.getString(1));
 					jso.put("name", rs.getString(2));
-					jsa1.add(jso);
 				}
-				jsa.add(jsa1);
+				jsa.add(jso);
 				rs.getStatement().close();
 				rs.close();
 				
-				jsa1 = new JSONArray();
+				JSONArray jsa1 = new JSONArray();
 				while(rs1.next()){
-					JSONObject jso = new JSONObject();
+					jso = new JSONObject();
 					jso.put("url", rs1.getString(1));
 					jso.put("description", rs1.getString(2));
 					jsa1.add(jso);
@@ -492,7 +490,7 @@ public class ServiceClass extends Service {
 				
 				jsa1 = new JSONArray();
 				for(int i=0; i<events.size();i++){
-					JSONObject jso = new JSONObject();
+					jso = new JSONObject();
 					jso.put("id", events.get(i).getId());
 					jso.put("name", events.get(i).getName());
 					jso.put("abbr", events.get(i).getAbbreviation());
