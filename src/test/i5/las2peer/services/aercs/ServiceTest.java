@@ -159,6 +159,7 @@ public class ServiceTest {
 	}
 	
 	/////////////////////////// conferences ////////////////////////////////////
+	
 	@Test
 	public void testConferenceList()
 	{
@@ -210,16 +211,16 @@ public class ServiceTest {
             
             assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
             
-            // check if first and last conferences' names start with 'A'
+            // check if first and last conferences' names start with random char
             JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
             if(!jsonResponse.isEmpty()){
             	String nameOfFirst = (String) ((JSONObject) jsonResponse.get(0)).get("name");
             	assertNotNull( nameOfFirst ); // assert that name exists            	
-            	assertTrue( nameOfFirst.charAt(0) == startChar); // check that name starts with A
+            	assertTrue( nameOfFirst.charAt(0) == startChar); // check that name starts with random char
             	
             	String nameOfLast = (String) ((JSONObject) jsonResponse.get(jsonResponse.size()-1)).get("name");
             	assertNotNull( nameOfLast ); // assert that name exists
-            	assertTrue( nameOfLast.charAt(0) == startChar); // check that name starts with A
+            	assertTrue( nameOfLast.charAt(0) == startChar); // check that name starts with random char
             }
    			System.out.println("Result of 'testConferenceListWithRandomStartChar': " + result.getResponse().trim());
 		}
@@ -253,6 +254,7 @@ public class ServiceTest {
 	}
 	
 	/////////////////////////// journals ////////////////////////////////////
+	
 	@Test
 	public void testJournalList()
 	{
@@ -304,16 +306,16 @@ public class ServiceTest {
             
             assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
             
-            // check if first and last conferences' names start with 'A'
+            // check if first and last conferences' names start with random char
             JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
             if(!jsonResponse.isEmpty()){
             	String nameOfFirst = (String) ((JSONObject) jsonResponse.get(0)).get("name");
             	assertNotNull( nameOfFirst ); // assert that name exists            	
-            	assertTrue( nameOfFirst.charAt(0) == startChar); // check that name starts with A
+            	assertTrue( nameOfFirst.charAt(0) == startChar); // check that name starts with random char
             	
             	String nameOfLast = (String) ((JSONObject) jsonResponse.get(jsonResponse.size()-1)).get("name");
             	assertNotNull( nameOfLast ); // assert that name exists
-            	assertTrue( nameOfLast.charAt(0) == startChar); // check that name starts with A
+            	assertTrue( nameOfLast.charAt(0) == startChar); // check that name starts with random char
             }
    			System.out.println("Result of 'testJournalListWithRandomStartChar': " + result.getResponse().trim());
 		}
@@ -347,6 +349,7 @@ public class ServiceTest {
 	}
 	
 	/////////////////////////// events ////////////////////////////////////
+	
 	@Test
 	public void testEventListEvents()
 	{
@@ -436,6 +439,7 @@ public class ServiceTest {
 	}
 	
 	/////////////////////////// seriesCharts ////////////////////////////////////
+	
 	@Test
 	public void testSeriesCharts()
 	{
@@ -492,6 +496,7 @@ public class ServiceTest {
 	}
 
 	/////////////////////////// event ////////////////////////////////////
+	
 	@Test
 	public void testEvent()
 	{
@@ -545,6 +550,7 @@ public class ServiceTest {
 	}	
 	
 	/////////////////////////// person ////////////////////////////////////
+	
 	@Test
 	public void testPersonWithId()
 	{
@@ -627,11 +633,519 @@ public class ServiceTest {
 		}
 	}		
 	
+	/////////////////////////// ranking ////////////////////////////////////
+	
+	@Test
+	public void testRanking()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"ranking", "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
+        	
+            assertEquals(3, jsonResponse.size()); // check if response size is 3: arguments, domains, ranking
+            
+            String conf = (String) ((JSONObject) jsonResponse.get(0)).get("conf");
+            assertEquals("0", conf); // check if conf is correct
+            String journal = (String) ((JSONObject) jsonResponse.get(0)).get("journal");
+            assertEquals("0", journal); // check if journal is correct
+            String domain = (String) ((JSONObject) jsonResponse.get(0)).get("domain");
+            assertEquals("0", domain); // check if domain is correct
+            String page = (String) ((JSONObject) jsonResponse.get(0)).get("page");
+            assertEquals("1", page); // check if page is correct
+            String col = (String) ((JSONObject) jsonResponse.get(0)).get("col");
+            assertEquals("5", col); // check if col is correct
+            String order = (String) ((JSONObject) jsonResponse.get(0)).get("order");
+            assertEquals("0", order); // check if order is correct
+
+            assertEquals(0, ((JSONArray)jsonResponse.get(2)).size()); // check if ranking size is 0: as we haven't provide any argument 
+
+   			System.out.println("Result of 'testRanking': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	@Test
+	public void testRankingWithConf()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"ranking?conf=1", "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
+        	
+            assertEquals(3, jsonResponse.size()); // check if response size is 3: persondetails, urls, participatedevents
+            
+            JSONArray rankings = (JSONArray) jsonResponse.get(2);
+            
+            if(!rankings.isEmpty()){
+	            String seriesKeyOfFirst = (String) ((JSONObject) rankings.get(0)).get("series_key");
+	            assertTrue(seriesKeyOfFirst.contains("conf")); // check if the first series is a conference
+	            String seriesKeyOfLast = (String) ((JSONObject) rankings.get(rankings.size()-1)).get("series_key");
+	            assertTrue(seriesKeyOfLast.contains("conf")); // check if the last series is a conference
+            }
+   			System.out.println("Result of 'testRankingWithConf': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	@Test
+	public void testRankingWithJournal()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"ranking?journal=1", "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
+        	
+            assertEquals(3, jsonResponse.size()); // check if response size is 3: persondetails, urls, participatedevents
+            
+            JSONArray rankings = (JSONArray) jsonResponse.get(2);
+            if(!rankings.isEmpty()){
+	            String seriesKeyOfFirst = (String) ((JSONObject) rankings.get(0)).get("series_key");
+	            assertTrue(seriesKeyOfFirst.contains("journals")); // check if the first series is a journal
+	            String seriesKeyOfLast = (String) ((JSONObject) rankings.get(rankings.size()-1)).get("series_key");
+	            assertTrue(seriesKeyOfLast.contains("journals")); // check if the last series is a journal
+            }
+   			System.out.println("Result of 'testRankingWithJournal': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	@Test
+	public void testRankingWithColAndIncreasingOrder()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"ranking?conf=1&journal=1&col=2&order=0", "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
+        	
+            assertEquals(3, jsonResponse.size()); // check if response size is 3: persondetails, urls, participatedevents
+            
+            JSONArray rankings = (JSONArray) jsonResponse.get(2);
+            if(!rankings.isEmpty()){
+    			Random r = new Random();
+    			int firstRan = r.nextInt(rankings.size());
+    			int secondRan = r.nextInt(rankings.size());
+    			while(secondRan == firstRan)
+        			secondRan = r.nextInt(rankings.size());
+
+    			int pageRankOfFirst = (int) ((JSONObject) rankings.get(0)).get("pr");
+    			int pageRankOfSecond = (int) ((JSONObject) rankings.get(rankings.size()-1)).get("pr");
+    			// since the order is zero, it is in increasing order
+    			if(firstRan > secondRan)
+	            	assertTrue(pageRankOfFirst > pageRankOfSecond); 
+	            else
+	            	assertTrue(pageRankOfFirst < pageRankOfSecond);
+            }
+   			System.out.println("Result of 'testRankingWithColAndIncreasingOrder': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	@Test
+	public void testRankingWithColAndDecreasingOrder()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"ranking?conf=1&journal=1&col=3&order=1", "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
+        	
+            assertEquals(3, jsonResponse.size()); // check if response size is 3: persondetails, urls, participatedevents
+            
+            JSONArray rankings = (JSONArray) jsonResponse.get(2);
+            if(!rankings.isEmpty()){
+    			Random r = new Random();
+    			int firstRan = r.nextInt(rankings.size());
+    			int secondRan = r.nextInt(rankings.size());
+    			while(secondRan == firstRan)
+        			secondRan = r.nextInt(rankings.size());
+
+    			int authorityOfFirst = (int) ((JSONObject) rankings.get(0)).get("au");
+    			int authorityOfSecond = (int) ((JSONObject) rankings.get(rankings.size()-1)).get("au");
+    			// since the order is one, it is in decreasing order
+    			if(firstRan < secondRan)
+	            	assertTrue(authorityOfFirst > authorityOfSecond); 
+	            else
+	            	assertTrue(authorityOfFirst < authorityOfSecond);
+            }
+   			System.out.println("Result of 'testRankingWithColAndDecreasingOrder': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+
+	/////////////////////////// seriesComparison ////////////////////////////////////
+	
+	@Test
+	public void testSeriesComparison()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"seriesComparison", "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
+            
+            assertEquals(4, jsonResponse.size()); // check if response size is 3: persondetails, urls, participatedevents
+
+            assertEquals(0, ((JSONArray) jsonResponse.get(1)).size()); // right div should be empty given no argument
+		
+            JSONArray conferences = (JSONArray) jsonResponse.get(2);
+            if(!conferences.isEmpty()){
+	            String seriesKeyOfFirst = (String) ((JSONObject) conferences.get(0)).get("series_key");
+	            assertTrue(seriesKeyOfFirst.contains("conf")); // check if the first series is a journal
+	            String seriesKeyOfLast = (String) ((JSONObject) conferences.get(conferences.size()-1)).get("series_key");
+	            assertTrue(seriesKeyOfLast.contains("conf")); // check if the last series is a journal
+            
+            	String nameOfFirst = (String) ((JSONObject) conferences.get(0)).get("name");
+            	assertNotNull( nameOfFirst ); // assert that name exists            	
+            	assertTrue( nameOfFirst.charAt(0) == 'A'); // check that name starts with A
+            	
+            	String nameOfLast = (String) ((JSONObject) conferences.get(conferences.size()-1)).get("name");
+            	assertNotNull( nameOfLast ); // assert that name exists
+            	assertTrue( nameOfLast.charAt(0) == 'A'); // check that name starts with A
+            }
+            JSONArray journals = (JSONArray) jsonResponse.get(3);
+            if(!journals.isEmpty()){
+	            String seriesKeyOfFirst = (String) ((JSONObject) journals.get(0)).get("series_key");
+	            assertTrue(seriesKeyOfFirst.contains("journals")); // check if the first series is a journal
+	            String seriesKeyOfLast = (String) ((JSONObject) journals.get(journals.size()-1)).get("series_key");
+	            assertTrue(seriesKeyOfLast.contains("journals")); // check if the last series is a journal
+            
+            	String nameOfFirst = (String) ((JSONObject) journals.get(0)).get("name");
+            	assertNotNull( nameOfFirst ); // assert that name exists            	
+            	assertTrue( nameOfFirst.charAt(0) == 'A'); // check that name starts with A
+            	
+            	String nameOfLast = (String) ((JSONObject) journals.get(journals.size()-1)).get("name");
+            	assertNotNull( nameOfLast ); // assert that name exists
+            	assertTrue( nameOfLast.charAt(0) == 'A'); // check that name starts with A
+            }
+            System.out.println("Result of 'testSeriesComparison': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	@Test
+	public void testSeriesComparsionWithStartChar()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			Random r = new Random();
+			char startChar = (char)(r.nextInt(26) + 'A');
+
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"seriesComparison?startChar="+startChar, "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            // check if first and last conferences' names start with random char
+            JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
+            JSONArray conferences = (JSONArray) jsonResponse.get(2);
+            JSONArray journals = (JSONArray) jsonResponse.get(3);
+
+            if(!conferences.isEmpty()){
+            	String nameOfFirst = (String) ((JSONObject) conferences.get(0)).get("name");
+            	assertNotNull( nameOfFirst ); // assert that name exists            	
+            	assertTrue( nameOfFirst.charAt(0) == startChar); // check that name starts with A
+            	
+            	String nameOfLast = (String) ((JSONObject) conferences.get(conferences.size()-1)).get("name");
+            	assertNotNull( nameOfLast ); // assert that name exists
+            	assertTrue( nameOfLast.charAt(0) == startChar); // check that name starts with A
+            }
+            if(!journals.isEmpty()){
+            	String nameOfFirst = (String) ((JSONObject) journals.get(0)).get("name");
+            	assertNotNull( nameOfFirst ); // assert that name exists            	
+            	assertTrue( nameOfFirst.charAt(0) == startChar); // check that name starts with A
+            	
+            	String nameOfLast = (String) ((JSONObject) journals.get(journals.size()-1)).get("name");
+            	assertNotNull( nameOfLast ); // assert that name exists
+            	assertTrue( nameOfLast.charAt(0) == startChar); // check that name starts with A
+            }
+   			System.out.println("Result of 'testSeriesComparsionWithStartChar': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	@Test
+	public void testSeriesComparsionWithSearchKeyword()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+		    final String alphabet = "abcdefghijklmnopqrstuvwxyz";
+		    final int N = alphabet.length();
+		    Random r = new Random();
+		    String randomSearch = "";
+		    for (int i = 0; i < 3; i++) {
+		    	randomSearch += alphabet.charAt(r.nextInt(N));
+		    }
+
+
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"seriesComparison?searchKeyword="+randomSearch, "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            // check if first and last conferences' names start with random char
+            JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
+            JSONArray series = (JSONArray) jsonResponse.get(0);
+
+            if(!series.isEmpty()){
+            	for(int i=0; i<series.size(); i++){
+            		String name = (String )((JSONObject)series.get(i)).get("name");
+            		assertTrue( name.toLowerCase().contains(randomSearch) );
+            	}
+            }
+   			System.out.println("Result of 'testSeriesComparsionWithSearchKeyword': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	@Test
+	public void testFailSeriesComparisonWithBadRequest()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"seriesComparison?startChar=AB", "");
+            assertEquals( 400, result.getHttpCode() ); // check if request fails
+            
+            assertTrue(result.getResponse().trim().contains("startChar must be of length 1")); // should return error message
+
+            result=c.sendRequest("GET", mainPath +"seriesComparison?typeOfSeriesSearchIn=sth", "");
+            assertEquals( 400, result.getHttpCode() ); // check if request fails
+            
+            assertTrue(result.getResponse().trim().contains("typeOfSeriesSearchIn should be one among: both, conferences or journals")); // should return error message
+
+            System.out.println("Result of 'testFailSeriesComparisonWithBadRequest': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+
+	/////////////////////////// search ////////////////////////////////////
+	
+	@Test
+	public void testSearch()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"search", "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+                        
+            System.out.println("Result of 'testSearch': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	@Test
+	public void testSearchWithSearchField()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"search?searchfield=2", "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            // check if first and last conferences' names start with random char
+            JSONArray events = (JSONArray) JSONValue.parseStrict(result.getResponse());
+
+            if(!events.isEmpty()){ // first item in the list is resultNum, so start looking from second
+            	int authorNum = (int) ((JSONObject) events.get(1)).get("author_num");
+            	assertNotNull( authorNum ); // assert that authorNum exists, meaning it is an event search            	
+            }
+   			System.out.println("Result of 'testSearchWithSearchField': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	@Test
+	public void testSearchWithSearchData()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+		    final String alphabet = "abcdefghijklmnopqrstuvwxyz";
+		    final int N = alphabet.length();
+		    Random r = new Random();
+		    String randomSearch = "";
+		    for (int i = 0; i < 3; i++) {
+		    	randomSearch += alphabet.charAt(r.nextInt(N));
+		    }
+
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"search?searchdata="+randomSearch, "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            // check if first and last conferences' names start with random char
+            JSONArray persons = (JSONArray) JSONValue.parseStrict(result.getResponse());
+
+            if(!persons.isEmpty()){
+            	for(int i=1; i<persons.size(); i++){ // first item in the list is resultNum, so start looking from second
+            		String name = (String )((JSONObject)persons.get(i)).get("name");
+            		assertTrue( name.toLowerCase().contains(randomSearch) );
+            	}
+            }
+   			System.out.println("Result of 'testSearchWithSearchData': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}	
+	
+	/////////////////////////// drawSeriesComparison ////////////////////////////////////
+	@Test
+	public void testDrawSeriesComparison()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("GET", mainPath +"drawSeriesComparison", "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            // check if first and last conferences' names start with 'A'
+            JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
+                        
+            assertEquals(3, jsonResponse.size()); // check if response size is 3: persondetails, urls, participatedevents
+
+            assertNotNull( ((JSONObject) jsonResponse.get(0)).get("selectedSeries") );
+            assertNotNull( ((JSONObject) jsonResponse.get(1)).get("colors") );
+            assertNotNull( ((JSONObject) jsonResponse.get(2)).get("urls") );
+            
+            System.out.println("Result of 'testDrawSeriesComparison': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+
 	
 	
+	/////////////////////////// tests during development process for debugging ////////////////////////////////////
 	@Ignore
 	@Test
-	public void testEventListt()
+	public void testDuringDevelopment()
 	{
 		MiniClient c = new MiniClient();
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
@@ -642,7 +1156,7 @@ public class ServiceTest {
             ClientResponse result=c.sendRequest("GET", mainPath +"events?id=a", "");
             assertEquals(200, result.getHttpCode());
             assertTrue(result.getResponse().trim().contains("adam")); //login name is part of response
-			System.out.println("Result of 'testValidateLogin': " + result.getResponse().trim());
+			System.out.println("Result of 'testDuringDevelopment': " + result.getResponse().trim());
 		}
 		catch(Exception e)
 		{
