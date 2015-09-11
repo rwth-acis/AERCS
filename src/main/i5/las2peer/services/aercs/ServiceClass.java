@@ -4,11 +4,8 @@ import i5.las2peer.api.Service;
 import i5.las2peer.restMapper.HttpResponse;
 import i5.las2peer.restMapper.MediaType;
 import i5.las2peer.restMapper.RESTMapper;
-import i5.las2peer.restMapper.annotations.ContentParam;
 import i5.las2peer.restMapper.annotations.GET;
-import i5.las2peer.restMapper.annotations.POST;
 import i5.las2peer.restMapper.annotations.Path;
-import i5.las2peer.restMapper.annotations.PathParam;
 import i5.las2peer.restMapper.annotations.Produces;
 import i5.las2peer.restMapper.annotations.QueryParam;
 import i5.las2peer.restMapper.annotations.Version;
@@ -21,6 +18,8 @@ import i5.las2peer.services.aercs.dbms.bdobjects.Media;
 import i5.las2peer.services.aercs.dbms.bdobjects.ObjectQuery;
 import i5.las2peer.services.aercs.usermanager.EventSeries;
 
+import java.awt.Rectangle;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -29,6 +28,18 @@ import java.sql.SQLException;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import y.base.Edge;
+import y.base.Node;
+import y.io.IOHandler;
+import y.layout.BufferedLayouter;
+import y.layout.Layouter;
+import y.layout.circular.CircularLayouter;
+import y.layout.organic.OrganicLayouter;
+import y.layout.organic.SmartOrganicLayouter;
+import y.util.DataProviders;
+import y.view.Graph2D;
+import y.view.Graph2DView;
+import yext.svg.io.SVGIOHandler;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -286,9 +297,6 @@ public class ServiceClass extends Service {
 		return resp;
 	}
 
-	/*
-	 * Returns all conferences whose name begin with startChar.
-	 */
 	@GET
 	@Path("seriesCharts")
 	public HttpResponse getChartUrls(
@@ -458,6 +466,11 @@ public class ServiceClass extends Service {
 		        AuthorNamePeer anp = new AuthorNamePeer();
 		        id = anp.getIdFromKey(key);
 		    }
+		    else if(key == "")
+		    {
+		        AuthorNamePeer anp = new AuthorNamePeer();
+		        key = anp.getKeyFromId(id);
+		    }
 	
 			ObjectQuery series = new ObjectQuery();
 			// id, name
@@ -472,6 +485,7 @@ public class ServiceClass extends Service {
 				if (rs.next()) {
 					jso.put("id", rs.getString(1));
 					jso.put("name", rs.getString(2));
+					jso.put("key", key);
 				}
 				jsa.add(jso);
 				rs.getStatement().close();
@@ -926,4 +940,242 @@ public class ServiceClass extends Service {
 		return resp;
 	}
 	
+	@GET
+	@Path("eventNetworkVisualization")
+	@Produces(MediaType.TEXT_XML)
+	public HttpResponse getEventNetworkData(
+			@QueryParam(name="id", defaultValue = "") String id,
+			@QueryParam(name="layout", defaultValue = "circular") String layoutStr,
+			@QueryParam(name="width", defaultValue = "") String widthStr,
+			@QueryParam(name="height", defaultValue = "") String heightStr){
+		int httpStatus = 200;
+		String content = new String();
+		JSONArray jsa = new JSONArray();
+
+		if(id.equals("")){
+			httpStatus = 400;
+			content = "id should not be empty";
+		}
+		
+		else if(!layoutStr.equals("circular") && !layoutStr.equals("organic") && !layoutStr.equals("smartOrganic")){
+			httpStatus = 400;
+			content = "layout should be circular, organice or smartOrganic";
+		}
+		
+		else{
+			ObjectQuery events = new ObjectQuery();
+			ResultSet event = events.searchEvent(id);
+			
+			try {
+				event.next();
+				String year = event.getString(4);
+				String series_id = String.valueOf(event.getInt(5));
+				event.getStatement().close();
+				event.close();
+				
+				ResultSet rs = events.searchEventNetwork(series_id, year);
+				while(rs.next()){
+					JSONObject jso = new JSONObject();
+					jso.put("s", rs.getInt(1));
+					jso.put("d", rs.getInt(2));
+					jso.put("sl", rs.getString(3));
+					jso.put("dl", rs.getString(4));
+					jsa.add(jso);
+				}
+				rs.getStatement().close();
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				httpStatus = 500;
+				content = "A Database Error occured";
+			}
+		}
+		
+		
+		if(httpStatus == 200) {
+			Graph2D graph = createTree( jsa ); 
+
+			try {
+				setGraphView(graph, layoutStr, widthStr, heightStr);
+				
+				IOHandler ioh = new SVGIOHandler();  
+				ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+				//ioh.write(graph, "MySVG.svg");
+				ioh.write(graph, outStream);
+				content = outStream.toString();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}  
+		}
+		HttpResponse resp = new HttpResponse(content);
+		resp.setStatus(httpStatus);
+		return resp;
+	}
+	
+	@GET
+	@Path("personNetworkVisualization")
+	@Produces(MediaType.TEXT_XML)
+	public HttpResponse getPersonNetworkVisualization(
+			@QueryParam(name="id", defaultValue = "") String id,
+			@QueryParam(name="layout", defaultValue = "circular") String layoutStr,
+			@QueryParam(name="width", defaultValue = "") String widthStr,
+			@QueryParam(name="height", defaultValue = "") String heightStr){
+		
+		int httpStatus = 200;
+		String content = new String();
+		JSONArray jsa = new JSONArray();
+
+		if(id.equals("")){
+			httpStatus = 400;
+			content = "id should not be empty";
+		}
+		
+		else if(!layoutStr.equals("circular") && !layoutStr.equals("organic") && !layoutStr.equals("smartOrganic")){
+			httpStatus = 400;
+			content = "layout should be circular, organice or smartOrganic";
+		}
+		
+		else{
+			ObjectQuery events = new ObjectQuery();
+			
+			try {	
+				ResultSet rs = events.searchPersonNetwork(id);
+				while(rs.next()){
+					JSONObject jso = new JSONObject();
+					jso.put("s", rs.getInt(1));
+					jso.put("d", rs.getInt(2));
+					jso.put("sl", rs.getString(3));
+					jso.put("dl", rs.getString(4));
+					jsa.add(jso);
+				}
+				rs.getStatement().close();
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				httpStatus = 500;
+				content = "A Database Error occured";
+			}
+		}
+		
+		if(httpStatus == 200) {
+			Graph2D graph = createTree( jsa ); 
+
+			try {
+				setGraphView(graph, layoutStr, widthStr, heightStr);
+				
+				IOHandler ioh = new SVGIOHandler();  
+				ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+				ioh.write(graph, outStream);
+				content = outStream.toString();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}  
+		}
+		HttpResponse resp = new HttpResponse(content);
+		resp.setStatus(httpStatus);
+		return resp;
+
+	}
+		
+	private void setGraphView(Graph2D graph, String layout, String widthStr, String heightStr){
+		
+		///////////////////// Set Layout ////////////////////////////
+		Layouter layouter = null;
+		if(layout.equals("circular")){
+			layouter = new CircularLayouter();
+		}
+		else if(layout.equals("organic")){
+		    OrganicLayouter organicLayouter = new OrganicLayouter();
+		    organicLayouter.setInitialPlacement(OrganicLayouter.AS_IS);
+			layouter = organicLayouter;
+		}
+		else if(layout.equals("smartOrganic")){
+		    SmartOrganicLayouter smartOrganicLayouter = new SmartOrganicLayouter();
+		    graph.addDataProvider(SmartOrganicLayouter.NODE_SUBSET_DATA, DataProviders.createConstantDataProvider(Boolean.FALSE));
+		    smartOrganicLayouter.setScope(SmartOrganicLayouter.SCOPE_ALL);
+		    smartOrganicLayouter.setMinimalNodeDistance(20);
+			layouter = smartOrganicLayouter;
+		}
+	    new BufferedLayouter(layouter).doLayout(graph);
+
+	    ///////////////////// Set Dimensions and Zoom ///////////////
+		int width, height;
+		Rectangle box = graph.getBoundingBox();
+		if( widthStr.equals("") || heightStr.equals("") ){
+			width= box.x;
+			height = box.y;
+		}
+		else{
+			width = Integer.parseInt(widthStr);
+			height = Integer.parseInt(heightStr);
+		}
+		
+		Graph2DView viewPort = new SVGIOHandler().createDefaultGraph2DView(graph);
+		
+//		double zoom=1;
+//		double zoomW = ((double)width)/(box.width);
+//		double zoomH = ((double)height)/(box.height);
+//		zoom = (zoomH>zoomW)? zoomW: zoomH; 
+//		viewPort.setZoom(zoom);
+//		viewPort.setViewPoint(0, 0);
+
+		viewPort.setSize(width, height);
+		viewPort.fitContent();
+
+		graph.setCurrentView(viewPort);
+	}
+	
+	private Graph2D createTree(JSONArray data) {
+
+	    try {	      
+	      Graph2D graph = new Graph2D();
+	      Vector<Integer> nodelist = new Vector<Integer>();
+	      int count = 0;
+
+	      for(int j=0; j<data.size(); j++) {
+	    	JSONObject obj = (JSONObject) data.get(j);
+	        int s = (int) obj.get("s"), d = (int) obj.get("d");
+	        String sl = (String) obj.get("sl"), dl = (String) obj.get("dl");
+	        Node nlist[] = graph.getNodeArray();
+	        Node sn, dn;
+	        try {
+	          if(!(nodelist.contains(s))){ 
+	            nodelist.add(s);
+	            sn = graph.createNode(0, 0, 80, 30, sl);
+	            nlist = graph.getNodeArray();
+	          } else {
+	            sn = nlist[nodelist.indexOf(s)];
+	          }
+	          if (!(nodelist.contains(d))) { 
+	            nodelist.add(d);
+	            dn = graph.createNode(0, 0, 80, 30, dl);
+	          } else {
+	            dn = nlist[nodelist.indexOf(d)];
+	          }
+	          Edge e1 = sn.getEdgeTo(dn);
+	          Edge e2 = sn.getEdgeFrom(dn);
+	          if (e1 == null && e2 == null) {
+	            graph.createEdge(sn,dn);
+	          }
+	        } catch(Exception e) {
+	          System.out.println("nodelist size: "+ nodelist.size());
+	          System.out.println("nlist: ");
+	          for(int i = 0; i < nlist.length; i++)
+	            System.out.print(nlist[i].index()+",");
+	        }
+	        count++;
+	      }
+	      
+	      if(count == 0)
+	        graph.createNode(0, 0, 80, 30, "No members");
+	      
+	      return graph;
+	    }
+	    catch (Exception e) {
+	      e.printStackTrace();
+	    }
+
+	    return null;
+	  }
+
 }

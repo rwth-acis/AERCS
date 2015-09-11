@@ -1351,6 +1351,74 @@ public class ObjectQuery {
 //        }
 //        return tmp;
 //    }
+    
+    public ResultSet searchEventNetwork(String series_id, String year)
+    {
+        try
+        {
+            if(con == null)
+            {
+                con = new DBConnection();
+                con.setConnection();
+            }
+            
+            ResultSet rs =  con.executeQuery("select ap.start_id, ap.end_id, " + 
+    				"(select name from author where id = ap.start_id) name1, " + 
+    				"(select name from author where id = ap.end_id) name2 " + 
+    				"from author_proceeding ap " + 
+    				"inner join proceeding_event pe on ap.proceeding_id = pe.proceeding_id " + 
+    				"inner join event ev on pe.event_id = ev.id " + 
+    				"where ev.series_id = " + series_id + " " + 
+    				"and ev.year <= '" + year + "'");
+            return rs;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    
+    public ResultSet searchPersonNetwork(String id)
+    {
+        try
+        {
+            if(con == null)
+            {
+                con = new DBConnection();
+                con.setConnection();
+            }
+            
+            ResultSet rs =  con.executeQuery("select " + 
+            	      "author_id1, " + 
+            	      "author_id2, " + 
+            	      "(select name from author where author_id1 = id) n1, " + 
+            	      "(select name from author where author_id2 = id) n2 " + 
+            	      "from " + 
+            	      "coauthorshipnetwork " + 
+            	      "where " + 
+            	      "author_id1 in " + 
+            	      "( " + 
+            	      "select author_id2 from coauthorshipnetwork where author_id1 = " + id + " and author_id2 <> " + id + " " + 
+            	      "union " + 
+            	      "select author_id1 from coauthorshipnetwork where author_id2 = " + id + " and author_id1 <> "  + id + " " + 
+            	      ") " + 
+            	      "and author_id2 in " + 
+            	      "( " + 
+            	      "select author_id2 from coauthorshipnetwork where author_id1 = " + id + " and author_id2 <> "  + id + " " + 
+            	      "union " + 
+            	      "select author_id1 from coauthorshipnetwork where author_id2 = "  + id + " and author_id1 <> "  + id + " " + 
+            	      ")");
+            return rs;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
 
    
