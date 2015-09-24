@@ -4,7 +4,9 @@ import i5.las2peer.api.Service;
 import i5.las2peer.restMapper.HttpResponse;
 import i5.las2peer.restMapper.MediaType;
 import i5.las2peer.restMapper.RESTMapper;
+import i5.las2peer.restMapper.annotations.ContentParam;
 import i5.las2peer.restMapper.annotations.GET;
+import i5.las2peer.restMapper.annotations.POST;
 import i5.las2peer.restMapper.annotations.Path;
 import i5.las2peer.restMapper.annotations.Produces;
 import i5.las2peer.restMapper.annotations.QueryParam;
@@ -44,6 +46,7 @@ import y.layout.organic.SmartOrganicLayouter;
 import y.util.DataProviders;
 import y.view.Graph2D;
 import y.view.Graph2DView;
+import y.view.NodeRealizer;
 import yext.svg.io.SVGIOHandler;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -945,18 +948,25 @@ public class ServiceClass extends Service {
 		return resp;
 	}
 	
-	@GET
+	@POST
 	@Path("eventNetworkVisualization")
-	@Produces(MediaType.TEXT_XML)
 	public HttpResponse getEventNetworkVisualization(
 			@QueryParam(name="id", defaultValue = "") String id,
 			@QueryParam(name="layout", defaultValue = "circular") String layoutStr,
+			@QueryParam(name="search", defaultValue = "") String search,
 			@QueryParam(name="width", defaultValue = "") String widthStr,
-			@QueryParam(name="height", defaultValue = "") String heightStr){
+			@QueryParam(name="height", defaultValue = "") String heightStr,
+			@ContentParam String graphML){
 		int httpStatus = 200;
 		String content = new String();
 		JSONArray jsa = new JSONArray();
+		IOHandler iohSVG = new SVGIOHandler();
+		IOHandler iohGML = new GraphMLIOHandler();
 
+		Graph2D graph = new Graph2D();
+		double viewPointX = 0;
+		double viewPointY = 0;
+		
 		if(id.equals("")){
 			httpStatus = 400;
 			content = "id should not be empty";
@@ -964,7 +974,37 @@ public class ServiceClass extends Service {
 		else if(!layoutStr.equals("circular") && !layoutStr.equals("organic") 
 				&& !layoutStr.equals("smartOrganic") && !layoutStr.equals("hierarchic")){
 			httpStatus = 400;
-			content = "layout should be circular, organice, smartOrganic or hierarchic";
+			content = "layout should be circular, organic, smartOrganic or hierarchic";
+		}
+		else if(search.length() > 0){
+			search = search.toLowerCase();
+			try {
+				byte[] input = graphML.getBytes();
+			    ByteArrayInputStream inputstream = new ByteArrayInputStream(input);
+//				FileOutputStream out = new FileOutputStream("test.graphml");
+//				out.write(graphML.getBytes());
+//				out.close();
+//
+//				iohGML.read(graph, "test.graphml");
+//	    		File file = new File("test.graphml");
+//	    		file.delete();
+
+				iohGML.read(graph, inputstream);
+			    Node[] nodes = graph.getNodeArray();
+
+			    for(int i = 0; i < nodes.length; i++){
+			    	NodeRealizer nr = graph.getRealizer(nodes[i]);
+			    	if(nr.getLabelText().toLowerCase().indexOf(search) >= 0){
+			    		viewPointX = nr.getX();
+			    		viewPointY = nr.getY();
+			    	}
+			    }
+
+			} catch (IOException e) {
+				httpStatus = 400;
+				content = "graph is not proper";
+				e.printStackTrace();
+			}
 		}
 		else{
 			ObjectQuery events = new ObjectQuery();
@@ -988,6 +1028,8 @@ public class ServiceClass extends Service {
 				}
 				rs.getStatement().close();
 				rs.close();
+				
+				graph = createTree( jsa ); 
 			} catch (SQLException e) {
 				e.printStackTrace();
 				httpStatus = 500;
@@ -997,16 +1039,19 @@ public class ServiceClass extends Service {
 		
 		
 		if(httpStatus == 200) {
-			Graph2D graph = createTree( jsa ); 
-
 			try {
-				setGraphView(graph, layoutStr, widthStr, heightStr);
+				setGraphView(graph, layoutStr, widthStr, heightStr, viewPointX, viewPointY);
 				
-				IOHandler ioh = new SVGIOHandler();  
 				ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+				ByteArrayOutputStream outStreamGML = new ByteArrayOutputStream();
+
 				//ioh.write(graph, "MySVG.svg");
-				ioh.write(graph, outStream);
-				content = outStream.toString();
+				iohSVG.write(graph, outStream);
+				iohGML.write(graph, outStreamGML);
+				JSONObject jso = new JSONObject();
+				jso.put("graphSVG", outStream.toString());
+				jso.put("graphML", outStreamGML.toString());
+				content = jso.toJSONString();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}  
@@ -1018,16 +1063,23 @@ public class ServiceClass extends Service {
 	
 	@GET
 	@Path("personNetworkVisualization")
-	@Produces(MediaType.TEXT_XML)
 	public HttpResponse getPersonNetworkVisualization(
 			@QueryParam(name="id", defaultValue = "") String id,
 			@QueryParam(name="layout", defaultValue = "circular") String layoutStr,
+			@QueryParam(name="search", defaultValue = "") String search,
 			@QueryParam(name="width", defaultValue = "") String widthStr,
-			@QueryParam(name="height", defaultValue = "") String heightStr){
+			@QueryParam(name="height", defaultValue = "") String heightStr,
+			@ContentParam String graphML){
 		
 		int httpStatus = 200;
 		String content = new String();
 		JSONArray jsa = new JSONArray();
+		IOHandler iohSVG = new SVGIOHandler();
+		IOHandler iohGML = new GraphMLIOHandler();
+		
+		Graph2D graph = new Graph2D();
+		double viewPointX = 0;
+		double viewPointY = 0;
 
 		if(id.equals("")){
 			httpStatus = 400;
@@ -1036,8 +1088,31 @@ public class ServiceClass extends Service {
 		else if(!layoutStr.equals("circular") && !layoutStr.equals("organic") 
 				&& !layoutStr.equals("smartOrganic") && !layoutStr.equals("hierarchic")){
 			httpStatus = 400;
-			content = "layout should be circular, organice, smartOrganic or hierarchic";
-		}	
+			content = "layout should be circular, organic, smartOrganic or hierarchic";
+		}
+		else if(search.length() > 0){
+			search = search.toLowerCase();
+			try {
+				byte[] input = graphML.getBytes();
+			    ByteArrayInputStream inputstream = new ByteArrayInputStream(input);
+				
+			    iohGML.read(graph, inputstream);
+			    Node[] nodes = graph.getNodeArray();
+
+			    for(int i = 0; i < nodes.length; i++){
+			    	NodeRealizer nr = graph.getRealizer(nodes[i]);
+			    	if(nr.getLabelText().toLowerCase().indexOf(search) >= 0){
+			    		viewPointX = nr.getX();
+			    		viewPointY = nr.getY();
+			    	}
+			    }
+
+			} catch (IOException e) {
+				httpStatus = 400;
+				content = "graph is not proper";
+				e.printStackTrace();
+			}
+		}
 		else{
 			ObjectQuery events = new ObjectQuery();
 			
@@ -1053,6 +1128,8 @@ public class ServiceClass extends Service {
 				}
 				rs.getStatement().close();
 				rs.close();
+				
+				graph = createTree( jsa ); 
 			} catch (SQLException e) {
 				e.printStackTrace();
 				httpStatus = 500;
@@ -1061,15 +1138,18 @@ public class ServiceClass extends Service {
 		}
 		
 		if(httpStatus == 200) {
-			Graph2D graph = createTree( jsa ); 
-
 			try {
-				setGraphView(graph, layoutStr, widthStr, heightStr);
+				setGraphView(graph, layoutStr, widthStr, heightStr, viewPointX, viewPointY);
 				
-				IOHandler ioh = new SVGIOHandler();  
 				ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-				ioh.write(graph, outStream);
-				content = outStream.toString();
+				ByteArrayOutputStream outStreamGML = new ByteArrayOutputStream();
+
+				iohSVG.write(graph, outStream);
+				iohGML.write(graph, outStreamGML);
+				JSONObject jso = new JSONObject();
+				jso.put("graphSVG", outStream.toString());
+				jso.put("graphML", outStreamGML.toString());
+				content = jso.toJSONString();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}  
@@ -1077,7 +1157,6 @@ public class ServiceClass extends Service {
 		HttpResponse resp = new HttpResponse(content);
 		resp.setStatus(httpStatus);
 		return resp;
-
 	}
 	
 	@GET
@@ -1091,10 +1170,11 @@ public class ServiceClass extends Service {
 		String content = new String();
 		JSONArray jsa = new JSONArray();
 		File[] listOfFiles = null;
+		
 		if(!layoutStr.equals("circular") && !layoutStr.equals("organic") 
 				&& !layoutStr.equals("smartOrganic") && !layoutStr.equals("hierarchic")){
 			httpStatus = 400;
-			content = "layout should be circular, organice, smartOrganic or hierarchic";
+			content = "layout should be circular, organic, smartOrganic or hierarchic";
 		}
 		else{
 			File folder = new File("resources/maps");
@@ -1120,11 +1200,10 @@ public class ServiceClass extends Service {
 				IOHandler ioh = new GraphMLIOHandler();
 				ioh.read(graph, inputstream);
 
-				setGraphView(graph, layoutStr, widthStr, heightStr);
+				setGraphView(graph, layoutStr, widthStr, heightStr, 0, 0);
 
 				ioh = new SVGIOHandler();  
 				ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-				//ioh.write(graph, "MySVG.svg");
 				ioh.write(graph, outStream);
 				JSONObject jso = new JSONObject();
 				jso.put("graph", outStream.toString());
@@ -1140,7 +1219,7 @@ public class ServiceClass extends Service {
 	}
 	
 		
-	private void setGraphView(Graph2D graph, String layout, String widthStr, String heightStr){
+	private void setGraphView(Graph2D graph, String layout, String widthStr, String heightStr, double viewPointX, double viewPointY){
 		
 		///////////////////// Set Layout ////////////////////////////
 		Layouter layouter = null;
@@ -1179,16 +1258,18 @@ public class ServiceClass extends Service {
 		}
 		
 		Graph2DView viewPort = new SVGIOHandler().createDefaultGraph2DView(graph);
-		
-//		double zoom=1;
-//		double zoomW = ((double)width)/(box.width);
-//		double zoomH = ((double)height)/(box.height);
-//		zoom = (zoomH>zoomW)? zoomW: zoomH; 
-//		viewPort.setZoom(zoom);
-//		viewPort.setViewPoint(0, 0);
-
 		viewPort.setSize(width, height);
-		viewPort.fitContent();
+
+		if(viewPointX != 0 || viewPointY != 0){
+//			double zoomW = ((double)width)/(box.width);
+//			double zoomH = ((double)height)/(box.height);
+//			double zoom = (zoomH>zoomW)? zoomW: zoomH; 
+//			viewPort.setZoom(zoom);
+			viewPort.setViewPoint((int)((viewPointX)-(width/2)), (int)((viewPointY-(height/2))));
+		}
+		else{
+			viewPort.fitContent();
+		}
 
 		graph.setCurrentView(viewPort);
 	}
@@ -1245,5 +1326,4 @@ public class ServiceClass extends Service {
 
 	    return null;
 	  }
-
 }
