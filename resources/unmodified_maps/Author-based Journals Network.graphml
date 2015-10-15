@@ -39,11 +39,11 @@
 			<y:SharedData>
 				<y:Brush name="SolidBrush" color="Black" id="1"/>
 				<y:Brush name="SolidBrush" color="White" id="2"/>
-				<y:ISimpleLabelStyle clipText="true" id="3">
+				<y:ISimpleLabelStyle clipText="true"id="3">
 					<y:Font family="dialog" points="13" style="Regular" />
 					<y:Brush refid="1"/>
 				</y:ISimpleLabelStyle>
-				<y:InteriorLabelModel position="Center" id="4">
+				<y:InteriorLabelModel position="Center"id="4">
 					<y:ModelState>
 						<y:Insets left="0" right="0" top="0" bottom="0"/>
 					</y:ModelState>
@@ -183,7 +183,7 @@
 <node id="G:n2707">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>ITA</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="23" height="23"/></data>
-<data key="d5">Informatique ThÃ©orique et Applications</data>
+<data key="d5">Informatique Th&eacute;orique et Applications</data>
 <data key="d7">2707</data>
 </node>
 <edge id="G:e9" source="G:n2653" target="G:n2707">
@@ -823,7 +823,7 @@
 <node id="G:n2704">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>CPC</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="22" height="22"/></data>
-<data key="d5">Combinatorics, Probability and Computing</data>
+<data key="d5">Combinatorics, Probability &amp; Computing</data>
 <data key="d7">2704</data>
 </node>
 <edge id="G:e71" source="G:n2668" target="G:n2704">
@@ -1070,7 +1070,7 @@
 <node id="G:n2779">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>DKE</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="27" height="27"/></data>
-<data key="d5">Data and Knowledge Engineering</data>
+<data key="d5">Data &amp; Knowledge Engineering</data>
 <data key="d7">2779</data>
 </node>
 <edge id="G:e94" source="G:n2673" target="G:n2779">
@@ -1343,7 +1343,7 @@
 <node id="G:n2701">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>COR</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="35" height="35"/></data>
-<data key="d5">Computers and Operations Research</data>
+<data key="d5">Computers &amp; Operations Research</data>
 <data key="d7">2701</data>
 </node>
 <edge id="G:e121" source="G:n2687" target="G:n2701">
@@ -1581,7 +1581,7 @@
 <node id="G:n3472">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>ITP</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="21" height="21"/></data>
-<data key="d5">Information Technology and People</data>
+<data key="d5">Information Technology &amp; People</data>
 <data key="d7">3472</data>
 </node>
 <edge id="G:e153" source="G:n2696" target="G:n3472">
@@ -1612,7 +1612,7 @@
 <node id="G:n2766">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>DCG</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="24" height="24"/></data>
-<data key="d5">Discrete and Computational Geometry</data>
+<data key="d5">Discrete &amp; Computational Geometry</data>
 <data key="d7">2766</data>
 </node>
 <edge id="G:e158" source="G:n2699" target="G:n2766">
@@ -2335,7 +2335,7 @@
 <node id="G:n2986">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>BEHAVIOURIT</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="22" height="22"/></data>
-<data key="d5">Behaviour and Information Technology</data>
+<data key="d5">Behaviour &amp; Information Technology</data>
 <data key="d7">2986</data>
 </node>
 <edge id="G:e257" source="G:n2724" target="G:n2986">
@@ -3819,7 +3819,7 @@
 <node id="G:n2813">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>DT</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="26" height="26"/></data>
-<data key="d5">IEEE Design and Test of Computers</data>
+<data key="d5">IEEE Design &amp; Test of Computers</data>
 <data key="d7">2813</data>
 </node>
 <node id="G:n2938">
@@ -3948,7 +3948,7 @@
 <node id="G:n2822">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>CG</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="32" height="32"/></data>
-<data key="d5">Computers and Graphics</data>
+<data key="d5">Computers &amp; Graphics</data>
 <data key="d7">2822</data>
 </node>
 <node id="G:n2823">
@@ -4217,7 +4217,7 @@
 <node id="G:n2843">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>CL</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="22" height="22"/></data>
-<data key="d5">Computer Languages[, Systems and Structures]</data>
+<data key="d5">Computer Languages[, Systems &amp; Structures]</data>
 <data key="d7">2843</data>
 </node>
 <edge id="G:e529" source="G:n2843" target="G:n3003">
@@ -4264,7 +4264,7 @@
 <node id="G:n2886">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>INFSOF</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="27" height="27"/></data>
-<data key="d5">Information and Software Technology</data>
+<data key="d5">Information &amp; Software Technology</data>
 <data key="d7">2886</data>
 </node>
 <edge id="G:e536" source="G:n2847" target="G:n2886">
@@ -4628,7 +4628,7 @@
 <node id="G:n3179">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>STVR</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="21" height="21"/></data>
-<data key="d5">Software Testing, Verification and Reliability (STVR)</data>
+<data key="d5">Software Testing, Verification &amp; Reliability (STVR)</data>
 <data key="d7">3179</data>
 </node>
 <edge id="G:e580" source="G:n2868" target="G:n3179">
@@ -5106,7 +5106,7 @@
 <node id="G:n3009">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>AHSWN</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Ad Hoc and Sensor Wireless Networks</data>
+<data key="d5">Ad Hoc &amp; Sensor Wireless Networks</data>
 <data key="d7">3009</data>
 </node>
 <edge id="G:e654" source="G:n2903" target="G:n3009">
@@ -6100,7 +6100,7 @@
 <node id="G:n3044">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>BISE</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Business and Information Systems Engineering</data>
+<data key="d5">Business &amp; Information Systems Engineering</data>
 <data key="d7">3044</data>
 </node>
 <edge id="G:e812" source="G:n3044" target="G:n3095">
@@ -6111,7 +6111,7 @@
 <node id="G:n3046">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>KI</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="25" height="25"/></data>
-<data key="d5">KÃ¼nstliche Intelligenz</data>
+<data key="d5">K&uuml;nstliche Intelligenz</data>
 <data key="d7">3046</data>
 </node>
 <node id="G:n3047">
@@ -6134,7 +6134,7 @@
 <node id="G:n3177">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>NFD</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Nachrichten fÃ¼r Dokumentation / Information - Wissenschaft und Praxis</data>
+<data key="d5">Nachrichten f&uuml;r Dokumentation / Information - Wissenschaft und Praxis</data>
 <data key="d7">3177</data>
 </node>
 <edge id="G:e814" source="G:n3048" target="G:n3177">
@@ -6186,7 +6186,7 @@
 <node id="G:n3141">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>CSL</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="21" height="21"/></data>
-<data key="d5">Computer Speech and Language</data>
+<data key="d5">Computer Speech &amp; Language</data>
 <data key="d7">3141</data>
 </node>
 <edge id="G:e822" source="G:n3056" target="G:n3141">
@@ -6851,7 +6851,7 @@
 <node id="G:n3165">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>CSDA</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="29" height="29"/></data>
-<data key="d5">Computational Statistics and Data Analysis</data>
+<data key="d5">Computational Statistics &amp; Data Analysis</data>
 <data key="d7">3165</data>
 </node>
 <edge id="G:e925" source="G:n3164" target="G:n3165">

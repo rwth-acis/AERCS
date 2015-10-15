@@ -39,11 +39,11 @@
 			<y:SharedData>
 				<y:Brush name="SolidBrush" color="Black" id="1"/>
 				<y:Brush name="SolidBrush" color="White" id="2"/>
-				<y:ISimpleLabelStyle clipText="true" id="3">
+				<y:ISimpleLabelStyle clipText="true"id="3">
 					<y:Font family="dialog" points="13" style="Regular" />
 					<y:Brush refid="1"/>
 				</y:ISimpleLabelStyle>
-				<y:InteriorLabelModel position="Center" id="4">
+				<y:InteriorLabelModel position="Center"id="4">
 					<y:ModelState>
 						<y:Insets left="0" right="0" top="0" bottom="0"/>
 					</y:ModelState>
@@ -284,7 +284,7 @@
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>KI</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="24" height="24"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ffffffff"/></y:IShapeNodeStyle></data>
-<data key="d5">Deutsche Jahrestagung fÃ¼r KÃ¼nstliche Intelligenz</data>
+<data key="d5">Deutsche Jahrestagung f&uuml;r K&uuml;nstliche Intelligenz</data>
 <data key="d7">1489</data>
 </node>
 <edge id="G:e18" source="G:n15" target="G:n1489">
@@ -768,7 +768,7 @@
 <data key="d3"><y:Geometry width="21" height="21"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ffffcccc"/></y:IShapeNodeStyle></data>
 <data key="d5">Logics in Artificial Intelligence -
-JournÃ©es EuropÃ©ennes sur la Logique en Intelligence Artificielle (JELIA)</data>
+Journ&eacute;es Europ&eacute;ennes sur la Logique en Intelligence Artificielle (JELIA)</data>
 <data key="d7">1382</data>
 </node>
 <edge id="G:e71" source="G:n91" target="G:n1382">
@@ -1808,7 +1808,7 @@ Implementation (PLDI)</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>SP</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="22" height="22"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ffcc6633"/></y:IShapeNodeStyle></data>
-<data key="d5">IEEE Symposium on Security and Privacy (SandP)</data>
+<data key="d5">IEEE Symposium on Security and Privacy (S&amp;P)</data>
 <data key="d7">1570</data>
 </node>
 <edge id="G:e173" source="G:n308" target="G:n1570">
@@ -2127,7 +2127,7 @@ Information Retrieval (SIGIR)</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>DCG</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="25" height="25"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ffffffff"/></y:IShapeNodeStyle></data>
-<data key="d5">Discrete and Computational Geometry</data>
+<data key="d5">Discrete &amp; Computational Geometry</data>
 <data key="d7">2766</data>
 </node>
 <edge id="G:e210" source="G:n340" target="G:n2766">
@@ -4616,7 +4616,7 @@ Modeling of Computer Systems</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>DKE</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="24" height="24"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ffccff99"/></y:IShapeNodeStyle></data>
-<data key="d5">Data and Knowledge Engineering</data>
+<data key="d5">Data &amp; Knowledge Engineering</data>
 <data key="d7">2779</data>
 </node>
 <edge id="G:e511" source="G:n827" target="G:n2779">
@@ -6321,7 +6321,7 @@ and Knowledge Discovery (PKDD)</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>PPOPP</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="21" height="21"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ffffffff"/></y:IShapeNodeStyle></data>
-<data key="d5">ACM SIGPLAN Symposium on Principles and
+<data key="d5">ACM SIGPLAN Symposium on Principles &amp;
 Practice of Parallel Programming (PPOPP)</data>
 <data key="d7">1789</data>
 </node>
@@ -7507,7 +7507,7 @@ Practice of Parallel Programming (PPOPP)</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>BDA</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="22" height="22"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ffffffff"/></y:IShapeNodeStyle></data>
-<data key="d5">JournÃ©es Bases de DonnÃ©es AvancÃ©es (BDA)</data>
+<data key="d5">Journ&eacute;es Bases de Donn&eacute;es Avanc&eacute;es (BDA)</data>
 <data key="d7">192</data>
 </node>
 <edge id="G:e940" source="G:n1637" target="G:n192">
@@ -8561,7 +8561,7 @@ Computer Graphics and Visualization (WSCG)</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>CG</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="28" height="28"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ffff9900"/></y:IShapeNodeStyle></data>
-<data key="d5">Computers and Graphics</data>
+<data key="d5">Computers &amp; Graphics</data>
 <data key="d7">2822</data>
 </node>
 <edge id="G:e1103" source="G:n1715" target="G:n2822">
@@ -8690,7 +8690,7 @@ Computer Graphics and Visualization (WSCG)</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>RIAO</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="22" height="22"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ffffffff"/></y:IShapeNodeStyle></data>
-<data key="d5">Recherche d'Information AssistÃ©e par Ordinateur - RIAO</data>
+<data key="d5">Recherche d'Information Assist&eacute;e par Ordinateur - RIAO</data>
 <data key="d7">2020</data>
 </node>
 <edge id="G:e1119" source="G:n1716" target="G:n2020">
@@ -11510,7 +11510,7 @@ Programming (PLILP)</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>CPC</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="22" height="22"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ff660000"/></y:IShapeNodeStyle></data>
-<data key="d5">Combinatorics, Probability and Computing</data>
+<data key="d5">Combinatorics, Probability &amp; Computing</data>
 <data key="d7">2704</data>
 </node>
 <edge id="G:e1621" source="G:n2704" target="G:n2967">
@@ -12879,7 +12879,7 @@ Programming (PLILP)</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>DT</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="25" height="25"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ffffffff"/></y:IShapeNodeStyle></data>
-<data key="d5">IEEE Design and Test of Computers</data>
+<data key="d5">IEEE Design &amp; Test of Computers</data>
 <data key="d7">2813</data>
 </node>
 <edge id="G:e1871" source="G:n2813" target="G:n472">
@@ -14725,7 +14725,7 @@ Programming (PLILP)</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>INFSOF</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="24" height="24"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ff00ff00"/></y:IShapeNodeStyle></data>
-<data key="d5">Information and Software Technology</data>
+<data key="d5">Information &amp; Software Technology</data>
 <data key="d7">2886</data>
 </node>
 <edge id="G:e2222" source="G:n3054" target="G:n2886">
@@ -14777,7 +14777,7 @@ Programming (PLILP)</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>STVR</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="21" height="21"/></data>
 <data key="d4"><y:IShapeNodeStyle><y:Shape>Ellipse</y:Shape><y:Pen name="SolidColor" color="Black" width="1"/><y:Brush name="SolidBrush" color="#ff00ff00"/></y:IShapeNodeStyle></data>
-<data key="d5">Software Testing, Verification and Reliability (STVR)</data>
+<data key="d5">Software Testing, Verification &amp; Reliability (STVR)</data>
 <data key="d7">3179</data>
 </node>
 <edge id="G:e2231" source="G:n3054" target="G:n3179">

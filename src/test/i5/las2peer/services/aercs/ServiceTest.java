@@ -158,6 +158,33 @@ public class ServiceTest {
 		assertTrue(cl.debugMapping());
 	}
 	
+	/////////////////////////// tests during development process for debugging ////////////////////////////////////
+	
+	@Test
+	public void testDuringDevelopment()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+//			String content = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\r\n<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" xmlns:java=\"http://www.yworks.com/xml/yfiles-common/1.0/java\" xmlns:sys=\"http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0\" xmlns:x=\"http://www.yworks.com/xml/yfiles-common/markup/2.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:y=\"http://www.yworks.com/xml/graphml\" xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd\">\r\n <!--Created by yFiles for Java 2.12.0.1-->\r\n <key for=\"port\" id=\"d0\" yfiles.type=\"portgraphics\"/>\r\n <key for=\"port\" id=\"d1\" yfiles.type=\"portgeometry\"/>\r\n <key for=\"port\" id=\"d2\" yfiles.type=\"portuserdata\"/>\r\n <key for=\"node\" id=\"d3\" yfiles.type=\"nodegraphics\"/>\r\n <key for=\"graphml\" id=\"d4\" yfiles.type=\"resources\"/>\r\n <key for=\"edge\" id=\"d5\" yfiles.type=\"edgegraphics\"/>\r\n <graph edgedefault=\"directed\" id=\"G\">\r\n <node id=\"n0\">\r\n <data key=\"d3\">\r\n <y:ShapeNode>\r\n <y:Geometry height=\"30.0\" width=\"80.0\" x=\"20.0\" y=\"288.0\"/>\r\n <y:Fill color=\"#CCCCFF\" transparent=\"false\"/>\r\n <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:NodeLabel alignment=\"center\" autoSizePolicy=\"content\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" hasLineColor=\"false\" height=\"18.701171875\" modelName=\"internal\" modelPosition=\"c\" textColor=\"#000000\" visible=\"true\" width=\"120.0\" x=\"-20.0\" y=\"5.6494140625\">Janusz A. Brzozowski</y:NodeLabel>\r\n <y:Shape type=\"rectangle\"/>\r\n </y:ShapeNode>\r\n </data>\r\n </node>\r\n <node id=\"n1\">\r\n <data key=\"d3\">\r\n <y:ShapeNode>\r\n <y:Geometry height=\"30.0\" width=\"80.0\" x=\"145.4400374531753\" y=\"288.0\"/>\r\n <y:Fill color=\"#CCCCFF\" transparent=\"false\"/>\r\n <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:NodeLabel alignment=\"center\" autoSizePolicy=\"content\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" hasLineColor=\"false\" height=\"18.701171875\" modelName=\"internal\" modelPosition=\"c\" textColor=\"#000000\" visible=\"true\" width=\"65.0\" x=\"7.5\" y=\"5.6494140625\">Zolt\u00E1n \uFFFD\u2030sik</y:NodeLabel>\r\n <y:Shape type=\"rectangle\"/>\r\n </y:ShapeNode>\r\n </data>\r\n </node>\r\n <node id=\"n2\">\r\n <data key=\"d3\">\r\n <y:ShapeNode>\r\n <y:Geometry height=\"30.0\" width=\"80.0\" x=\"159.0\" y=\"117.0\"/>\r\n <y:Fill color=\"#CCCCFF\" transparent=\"false\"/>\r\n <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:NodeLabel alignment=\"center\" autoSizePolicy=\"content\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" hasLineColor=\"false\" height=\"18.701171875\" modelName=\"internal\" modelPosition=\"c\" textColor=\"#000000\" visible=\"true\" width=\"92.0\" x=\"-6.0\" y=\"5.6494140625\">Juris Hartmanis</y:NodeLabel>\r\n <y:Shape type=\"rectangle\"/>\r\n </y:ShapeNode>\r\n </data>\r\n </node>\r\n <node id=\"n3\">\r\n <data key=\"d3\">\r\n <y:ShapeNode>\r\n <y:Geometry height=\"30.0\" width=\"80.0\" x=\"7.0\" y=\"117.0\"/>\r\n <y:Fill color=\"#CCCCFF\" transparent=\"false\"/>\r\n <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:NodeLabel alignment=\"center\" autoSizePolicy=\"content\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" hasLineColor=\"false\" height=\"18.701171875\" modelName=\"internal\" modelPosition=\"c\" textColor=\"#000000\" visible=\"true\" width=\"94.0\" x=\"-7.0\" y=\"5.6494140625\">John E. Hopcroft</y:NodeLabel>\r\n <y:Shape type=\"rectangle\"/>\r\n </y:ShapeNode>\r\n </data>\r\n </node>\r\n <node id=\"n4\">\r\n <data key=\"d3\">\r\n <y:ShapeNode>\r\n <y:Geometry height=\"30.0\" width=\"80.0\" x=\"0.0\" y=\"213.0\"/>\r\n <y:Fill color=\"#CCCCFF\" transparent=\"false\"/>\r\n <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:NodeLabel alignment=\"center\" autoSizePolicy=\"content\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" hasLineColor=\"false\" height=\"18.701171875\" modelName=\"internal\" modelPosition=\"c\" textColor=\"#000000\" visible=\"true\" width=\"78.0\" x=\"1.0\" y=\"5.6494140625\">Werner Kuich</y:NodeLabel>\r\n <y:Shape type=\"rectangle\"/>\r\n </y:ShapeNode>\r\n </data>\r\n </node>\r\n <node id=\"n5\">\r\n <data key=\"d3\">\r\n <y:ShapeNode>\r\n <y:Geometry height=\"30.0\" width=\"80.0\" x=\"180.0\" y=\"21.0\"/>\r\n <y:Fill color=\"#CCCCFF\" transparent=\"false\"/>\r\n <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:NodeLabel alignment=\"center\" autoSizePolicy=\"content\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" hasLineColor=\"false\" height=\"18.701171875\" modelName=\"internal\" modelPosition=\"c\" textColor=\"#000000\" visible=\"true\" width=\"113.0\" x=\"-16.5\" y=\"5.6494140625\">Robert McNaughton</y:NodeLabel>\r\n <y:Shape type=\"rectangle\"/>\r\n </y:ShapeNode>\r\n </data>\r\n </node>\r\n <node id=\"n6\">\r\n <data key=\"d3\">\r\n <y:ShapeNode>\r\n <y:Geometry height=\"30.0\" width=\"80.0\" x=\"17.5\" y=\"21.0\"/>\r\n <y:Fill color=\"#CCCCFF\" transparent=\"false\"/>\r\n <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:NodeLabel alignment=\"center\" autoSizePolicy=\"content\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" hasLineColor=\"false\" height=\"18.701171875\" modelName=\"internal\" modelPosition=\"c\" textColor=\"#000000\" visible=\"true\" width=\"115.0\" x=\"-17.5\" y=\"5.6494140625\">Grzegorz Rozenberg</y:NodeLabel>\r\n <y:Shape type=\"rectangle\"/>\r\n </y:ShapeNode>\r\n </data>\r\n </node>\r\n <node id=\"n7\">\r\n <data key=\"d3\">\r\n <y:ShapeNode>\r\n <y:Geometry height=\"30.0\" width=\"80.0\" x=\"146.0\" y=\"213.0\"/>\r\n <y:Fill color=\"#CCCCFF\" transparent=\"false\"/>\r\n <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:NodeLabel alignment=\"center\" autoSizePolicy=\"content\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" hasLineColor=\"false\" height=\"18.701171875\" modelName=\"internal\" modelPosition=\"c\" textColor=\"#000000\" visible=\"true\" width=\"78.0\" x=\"1.0\" y=\"5.6494140625\">Arto Salomaa</y:NodeLabel>\r\n <y:Shape type=\"rectangle\"/>\r\n </y:ShapeNode>\r\n </data>\r\n </node>\r\n <edge id=\"e0\" source=\"n0\" target=\"n1\">\r\n <data key=\"d5\">\r\n <y:PolyLineEdge>\r\n <y:Path sx=\"0.0\" sy=\"0.0\" tx=\"0.0\" ty=\"0.0\"/>\r\n <y:LineStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:Arrows source=\"none\" target=\"none\"/>\r\n <y:BendStyle smoothed=\"false\"/>\r\n </y:PolyLineEdge>\r\n </data>\r\n </edge>\r\n <edge id=\"e1\" source=\"n2\" target=\"n2\">\r\n <data key=\"d5\">\r\n <y:PolyLineEdge>\r\n <y:Path sx=\"20.0\" sy=\"-15.0\" tx=\"40.0\" ty=\"-7.5\">\r\n <y:Point x=\"219.0\" y=\"102.0\"/>\r\n <y:Point x=\"225.0\" y=\"96.0\"/>\r\n <y:Point x=\"254.0\" y=\"96.0\"/>\r\n <y:Point x=\"260.0\" y=\"102.0\"/>\r\n <y:Point x=\"260.0\" y=\"118.5\"/>\r\n <y:Point x=\"254.0\" y=\"124.5\"/>\r\n </y:Path>\r\n <y:LineStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:Arrows source=\"none\" target=\"none\"/>\r\n <y:BendStyle smoothed=\"false\"/>\r\n </y:PolyLineEdge>\r\n </data>\r\n </edge>\r\n <edge id=\"e2\" source=\"n3\" target=\"n3\">\r\n <data key=\"d5\">\r\n <y:PolyLineEdge>\r\n <y:Path sx=\"20.0\" sy=\"-15.0\" tx=\"40.0\" ty=\"-7.5\">\r\n <y:Point x=\"67.0\" y=\"102.0\"/>\r\n <y:Point x=\"73.0\" y=\"96.0\"/>\r\n <y:Point x=\"102.0\" y=\"96.0\"/>\r\n <y:Point x=\"108.0\" y=\"102.0\"/>\r\n <y:Point x=\"108.0\" y=\"118.5\"/>\r\n <y:Point x=\"102.0\" y=\"124.5\"/>\r\n </y:Path>\r\n <y:LineStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:Arrows source=\"none\" target=\"none\"/>\r\n <y:BendStyle smoothed=\"false\"/>\r\n </y:PolyLineEdge>\r\n </data>\r\n </edge>\r\n <edge id=\"e3\" source=\"n4\" target=\"n4\">\r\n <data key=\"d5\">\r\n <y:PolyLineEdge>\r\n <y:Path sx=\"20.0\" sy=\"-15.0\" tx=\"40.0\" ty=\"-7.5\">\r\n <y:Point x=\"60.0\" y=\"198.0\"/>\r\n <y:Point x=\"66.0\" y=\"192.0\"/>\r\n <y:Point x=\"95.0\" y=\"192.0\"/>\r\n <y:Point x=\"101.0\" y=\"198.0\"/>\r\n <y:Point x=\"101.0\" y=\"214.5\"/>\r\n <y:Point x=\"95.0\" y=\"220.5\"/>\r\n </y:Path>\r\n <y:LineStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:Arrows source=\"none\" target=\"none\"/>\r\n <y:BendStyle smoothed=\"false\"/>\r\n </y:PolyLineEdge>\r\n </data>\r\n </edge>\r\n <edge id=\"e4\" source=\"n5\" target=\"n5\">\r\n <data key=\"d5\">\r\n <y:PolyLineEdge>\r\n <y:Path sx=\"20.0\" sy=\"-15.0\" tx=\"40.0\" ty=\"-7.5\">\r\n <y:Point x=\"240.0\" y=\"6.0\"/>\r\n <y:Point x=\"246.0\" y=\"0.0\"/>\r\n <y:Point x=\"275.0\" y=\"0.0\"/>\r\n <y:Point x=\"281.0\" y=\"6.0\"/>\r\n <y:Point x=\"281.0\" y=\"22.5\"/>\r\n <y:Point x=\"275.0\" y=\"28.5\"/>\r\n </y:Path>\r\n <y:LineStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:Arrows source=\"none\" target=\"none\"/>\r\n <y:BendStyle smoothed=\"false\"/>\r\n </y:PolyLineEdge>\r\n </data>\r\n </edge>\r\n <edge id=\"e5\" source=\"n6\" target=\"n6\">\r\n <data key=\"d5\">\r\n <y:PolyLineEdge>\r\n <y:Path sx=\"20.0\" sy=\"-15.0\" tx=\"40.0\" ty=\"-7.5\">\r\n <y:Point x=\"77.5\" y=\"6.0\"/>\r\n <y:Point x=\"83.5\" y=\"0.0\"/>\r\n <y:Point x=\"112.5\" y=\"0.0\"/>\r\n <y:Point x=\"118.5\" y=\"6.0\"/>\r\n <y:Point x=\"118.5\" y=\"22.5\"/>\r\n <y:Point x=\"112.5\" y=\"28.5\"/>\r\n </y:Path>\r\n <y:LineStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:Arrows source=\"none\" target=\"none\"/>\r\n <y:BendStyle smoothed=\"false\"/>\r\n </y:PolyLineEdge>\r\n </data>\r\n </edge>\r\n <edge id=\"e6\" source=\"n7\" target=\"n7\">\r\n <data key=\"d5\">\r\n <y:PolyLineEdge>\r\n <y:Path sx=\"20.0\" sy=\"-15.0\" tx=\"40.0\" ty=\"-7.5\">\r\n <y:Point x=\"206.0\" y=\"198.0\"/>\r\n <y:Point x=\"212.0\" y=\"192.0\"/>\r\n <y:Point x=\"241.0\" y=\"192.0\"/>\r\n <y:Point x=\"247.0\" y=\"198.0\"/>\r\n <y:Point x=\"247.0\" y=\"214.5\"/>\r\n <y:Point x=\"241.0\" y=\"220.5\"/>\r\n </y:Path>\r\n <y:LineStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\r\n <y:Arrows source=\"none\" target=\"none\"/>\r\n <y:BendStyle smoothed=\"false\"/>\r\n </y:PolyLineEdge>\r\n </data>\r\n </edge>\r\n </graph>\r\n <data key=\"d4\">\r\n <y:Resources/>\r\n </data>\r\n</graphml>";
+//            ClientResponse result=c.sendRequest("POST", mainPath +"eventNetworkVisualization?id=6300&layout=circular&search=rob&width=950&height=750", content);
+            
+        	ClientResponse result=c.sendRequest("GET", mainPath +"eventNetworkVisualization?id=6300&layout=circular&search=&width=950&height=700", "");
+			assertEquals(200, result.getHttpCode());
+            assertTrue(result.getResponse().trim().contains("adam")); //login name is part of response
+			System.out.println("Result of 'testDuringDevelopment': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+
+	
 	/////////////////////////// conferences ////////////////////////////////////
 	
 	@Test
@@ -401,7 +428,7 @@ public class ServiceTest {
         	
             String series_name = (String) ((JSONObject) jsonResponse.get(0)).get("series_name");
             String newest_year = (String) ((JSONObject) jsonResponse.get(1)).get("newest_year");
-            String event_authors = (String) ((JSONObject) jsonResponse.get(2)).get("authorKeys");
+            JSONArray event_authors = (JSONArray) ((JSONObject) jsonResponse.get(2)).get("authorKeys");
 
             assertNotNull( series_name ); // assert that series_name exists            	
             assertNotNull( newest_year ); // assert that newest_year exists            	
@@ -653,18 +680,18 @@ public class ServiceTest {
         	
             assertEquals(3, jsonResponse.size()); // check if response size is 3: arguments, domains, ranking
             
-            String conf = (String) ((JSONObject) jsonResponse.get(0)).get("conf");
-            assertEquals("0", conf); // check if conf is correct
-            String journal = (String) ((JSONObject) jsonResponse.get(0)).get("journal");
-            assertEquals("0", journal); // check if journal is correct
-            String domain = (String) ((JSONObject) jsonResponse.get(0)).get("domain");
-            assertEquals("0", domain); // check if domain is correct
-            String page = (String) ((JSONObject) jsonResponse.get(0)).get("page");
-            assertEquals("1", page); // check if page is correct
-            String col = (String) ((JSONObject) jsonResponse.get(0)).get("col");
-            assertEquals("5", col); // check if col is correct
-            String order = (String) ((JSONObject) jsonResponse.get(0)).get("order");
-            assertEquals("0", order); // check if order is correct
+            int conf = (int) ((JSONObject) jsonResponse.get(0)).get("conf");
+            assertEquals(0, conf); // check if conf is correct
+            int journal = (int) ((JSONObject) jsonResponse.get(0)).get("journal");
+            assertEquals(0, journal); // check if journal is correct
+            int domain = (int) ((JSONObject) jsonResponse.get(0)).get("domain");
+            assertEquals(0, domain); // check if domain is correct
+            int page = (int) ((JSONObject) jsonResponse.get(0)).get("page");
+            assertEquals(1, page); // check if page is correct
+            int col = (int) ((JSONObject) jsonResponse.get(0)).get("col");
+            assertEquals(5, col); // check if col is correct
+            int order = (int) ((JSONObject) jsonResponse.get(0)).get("order");
+            assertEquals(0, order); // check if order is correct
 
             assertEquals(0, ((JSONArray)jsonResponse.get(2)).size()); // check if ranking size is 0: as we haven't provide any argument 
 
@@ -772,8 +799,8 @@ public class ServiceTest {
     			while(secondRan == firstRan)
         			secondRan = r.nextInt(rankings.size());
 
-    			int pageRankOfFirst = (int) ((JSONObject) rankings.get(0)).get("pr");
-    			int pageRankOfSecond = (int) ((JSONObject) rankings.get(rankings.size()-1)).get("pr");
+    			int pageRankOfFirst = (int) ((JSONObject) rankings.get(firstRan)).get("pr");
+    			int pageRankOfSecond = (int) ((JSONObject) rankings.get(secondRan)).get("pr");
     			// since the order is zero, it is in increasing order
     			if(firstRan > secondRan)
 	            	assertTrue(pageRankOfFirst > pageRankOfSecond); 
@@ -815,13 +842,13 @@ public class ServiceTest {
     			while(secondRan == firstRan)
         			secondRan = r.nextInt(rankings.size());
 
-    			int authorityOfFirst = (int) ((JSONObject) rankings.get(0)).get("au");
-    			int authorityOfSecond = (int) ((JSONObject) rankings.get(rankings.size()-1)).get("au");
+    			int authorityOfFirst = (int) ((JSONObject) rankings.get(firstRan)).get("au");
+    			int authorityOfSecond = (int) ((JSONObject) rankings.get(secondRan)).get("au");
     			// since the order is one, it is in decreasing order
     			if(firstRan < secondRan)
-	            	assertTrue(authorityOfFirst > authorityOfSecond); 
+	            	assertTrue(authorityOfFirst >= authorityOfSecond); 
 	            else
-	            	assertTrue(authorityOfFirst < authorityOfSecond);
+	            	assertTrue(authorityOfFirst <= authorityOfSecond);
             }
    			System.out.println("Result of 'testRankingWithColAndDecreasingOrder': " + result.getResponse().trim());
 		}
@@ -1140,12 +1167,9 @@ public class ServiceTest {
 		}
 	}
 
-	
-	
-	/////////////////////////// tests during development process for debugging ////////////////////////////////////
-	@Ignore
+	/////////////////////////// eventNetworkVisualization ////////////////////////////////////
 	@Test
-	public void testDuringDevelopment()
+	public void testEventNetworkVisualization()
 	{
 		MiniClient c = new MiniClient();
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
@@ -1153,10 +1177,17 @@ public class ServiceTest {
 		try
 		{
 			c.setLogin(Long.toString(testAgent.getId()), testPass);
-            ClientResponse result=c.sendRequest("GET", mainPath +"events?id=a", "");
-            assertEquals(200, result.getHttpCode());
-            assertTrue(result.getResponse().trim().contains("adam")); //login name is part of response
-			System.out.println("Result of 'testDuringDevelopment': " + result.getResponse().trim());
+            ClientResponse result=c.sendRequest("POST", mainPath +"eventNetworkVisualization?id=1", "");
+            assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+            
+            assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+            
+            // check if first and last conferences' names start with 'A'
+            JSONObject jsonResponse = (JSONObject) JSONValue.parseStrict(result.getResponse());
+                        
+            assertNotNull( jsonResponse.get("graphSVG") ); 
+
+            System.out.println("Result of 'testEventNetworkVisualization': " + result.getResponse().trim());
 		}
 		catch(Exception e)
 		{
@@ -1164,6 +1195,130 @@ public class ServiceTest {
 			fail ( "Exception: " + e );
 		}
 	}
+
+	@Test
+	public void testFailEventNetworkVisualization()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+            ClientResponse result=c.sendRequest("POST", mainPath +"eventNetworkVisualization", "");
+            assertEquals( 400, result.getHttpCode() ); // check if request fails
+        	
+            assertTrue(result.getResponse().trim().contains("id should not be empty")); // should return error message
+   			System.out.println("Result of 'testFailEventNetworkVisualization': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	/////////////////////////// personNetworkVisualization ////////////////////////////////////
+	@Test
+	public void testPersonNetworkVisualization()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+			ClientResponse result=c.sendRequest("POST", mainPath +"personNetworkVisualization?id=1", "");
+			assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+			
+			assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+			
+			// check if first and last conferences' names start with 'A'
+			JSONObject jsonResponse = (JSONObject) JSONValue.parseStrict(result.getResponse());
+			  
+            assertNotNull( jsonResponse.get("graphSVG") ); 
+			
+			System.out.println("Result of 'testPersonNetworkVisualization': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	@Test
+	public void testFailPersonNetworkVisualization()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+			ClientResponse result=c.sendRequest("POST", mainPath +"personNetworkVisualization", "");
+			assertEquals( 400, result.getHttpCode() ); // check if request fails
+			
+			assertTrue(result.getResponse().trim().contains("id should not be empty")); // should return error message
+			System.out.println("Result of 'testFailPersonNetworkVisualization': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+
+	/////////////////////////// networkVisualization ////////////////////////////////////
+	public void testNetworkVisualization()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+			ClientResponse result=c.sendRequest("GET", mainPath +"networkVisualization", "");
+			assertEquals( 200, result.getHttpCode() ); // check if request returns successfully
+			
+			assertTrue( isJSONValid(result.getResponse()) ); // check if response is valid json
+			
+			// check if first and last conferences' names start with 'A'
+			JSONArray jsonResponse = (JSONArray) JSONValue.parseStrict(result.getResponse());
+			  
+			assertNotNull( ((JSONObject) jsonResponse.get(jsonResponse.size()-1)).get("graph") );
+			
+			System.out.println("Result of 'testNetworkVisualization': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+	
+	@Test
+	public void testFailNetworkVisualization()
+	{
+		MiniClient c = new MiniClient();
+		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		
+		try
+		{
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
+			ClientResponse result=c.sendRequest("GET", mainPath +"networkVisualization?graphml=sth sth", "");
+			assertEquals( 400, result.getHttpCode() ); // check if request fails
+			
+			assertTrue(result.getResponse().trim().contains("could not found the given graphml file")); // should return error message
+			System.out.println("Result of 'testFailNetworkVisualization': " + result.getResponse().trim());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail ( "Exception: " + e );
+		}
+	}
+
 	
 	public boolean isJSONValid(String test) {
 	    try {

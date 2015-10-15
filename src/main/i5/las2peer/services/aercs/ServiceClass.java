@@ -378,7 +378,7 @@ public class ServiceClass extends Service {
 			        rs.close();
 			        counter++;
 			    }
-			    
+
 			    String color3[] = {"0000FF"};
 			    String url[] = es.createGoogleURL(selectedSeries, "r", color3, true);
 			    
@@ -745,7 +745,9 @@ public class ServiceClass extends Service {
 					jsa1.add(jso);
 	            }
 				jsa.add(jsa1);
-				
+				rs.getStatement().close();
+				rs.close();
+
 				jsa1 = new JSONArray();
 	        	//id, name, abbreviation, series_key
 	            rs = es.selectJournals(startChar);
@@ -758,7 +760,9 @@ public class ServiceClass extends Service {
 					jsa1.add(jso);
 	            }
 				jsa.add(jsa1);
-	
+				rs.getStatement().close();
+				rs.close();
+
 			} catch (SQLException e) {
 				e.printStackTrace();
 				httpStatus = 500;
@@ -981,22 +985,17 @@ public class ServiceClass extends Service {
 			try {
 				byte[] input = graphML.getBytes();
 			    ByteArrayInputStream inputstream = new ByteArrayInputStream(input);
-//				FileOutputStream out = new FileOutputStream("test.graphml");
-//				out.write(graphML.getBytes());
-//				out.close();
-//
-//				iohGML.read(graph, "test.graphml");
-//	    		File file = new File("test.graphml");
-//	    		file.delete();
 
 				iohGML.read(graph, inputstream);
 			    Node[] nodes = graph.getNodeArray();
 
-			    for(int i = 0; i < nodes.length; i++){
+			    boolean isFound = false;
+			    for(int i = 0; i < nodes.length && !isFound; i++){
 			    	NodeRealizer nr = graph.getRealizer(nodes[i]);
 			    	if(nr.getLabelText().toLowerCase().indexOf(search) >= 0){
 			    		viewPointX = nr.getX();
 			    		viewPointY = nr.getY();
+			    		isFound = true;
 			    	}
 			    }
 
@@ -1045,7 +1044,7 @@ public class ServiceClass extends Service {
 				ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 				ByteArrayOutputStream outStreamGML = new ByteArrayOutputStream();
 
-				//ioh.write(graph, "MySVG.svg");
+//				iohSVG.write(graph, "MySVG.svg");
 				iohSVG.write(graph, outStream);
 				iohGML.write(graph, outStreamGML);
 				JSONObject jso = new JSONObject();
@@ -1061,7 +1060,7 @@ public class ServiceClass extends Service {
 		return resp;
 	}
 	
-	@GET
+	@POST
 	@Path("personNetworkVisualization")
 	public HttpResponse getPersonNetworkVisualization(
 			@QueryParam(name="id", defaultValue = "") String id,
@@ -1099,11 +1098,13 @@ public class ServiceClass extends Service {
 			    iohGML.read(graph, inputstream);
 			    Node[] nodes = graph.getNodeArray();
 
-			    for(int i = 0; i < nodes.length; i++){
+			    boolean isFound = false;
+			    for(int i = 0; i < nodes.length && !isFound; i++){
 			    	NodeRealizer nr = graph.getRealizer(nodes[i]);
 			    	if(nr.getLabelText().toLowerCase().indexOf(search) >= 0){
 			    		viewPointX = nr.getX();
 			    		viewPointY = nr.getY();
+			    		isFound = true;
 			    	}
 			    }
 
@@ -1170,6 +1171,14 @@ public class ServiceClass extends Service {
 		String content = new String();
 		JSONArray jsa = new JSONArray();
 		File[] listOfFiles = null;
+		int index = 0;
+		
+		try {
+			graphml = java.net.URLDecoder.decode(graphml, "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			httpStatus = 400;
+			content = "cannot decode URL argument";
+		}
 		
 		if(!layoutStr.equals("circular") && !layoutStr.equals("organic") 
 				&& !layoutStr.equals("smartOrganic") && !layoutStr.equals("hierarchic")){
@@ -1184,9 +1193,22 @@ public class ServiceClass extends Service {
 				JSONObject jso = new JSONObject();
 				String name = listOfFiles[i].getName();
 				if(name.endsWith(".graphml")){
-					jso.put("graphml", name);
+					String fileNameWithoutExt = name.replaceFirst("[.][^.]+$", "");
+					jso.put("graphml", fileNameWithoutExt);
 					jsa.add(jso);
 				}
+			}
+			if(!graphml.equals("")){
+				JSONObject jso = new JSONObject();
+				jso.put("graphml", graphml);
+				index = jsa.indexOf( jso );
+				if(index == -1){
+					httpStatus = 400;
+					content = "could not found the given graphml file";
+				}
+			}
+			else{
+				index = 0;
 			}
 		}
 		
@@ -1194,14 +1216,14 @@ public class ServiceClass extends Service {
 			Graph2D graph = new Graph2D(); 
 
 			try {
-			    byte[] input = Files.readAllBytes(listOfFiles[0].toPath());
+			    byte[] input = Files.readAllBytes(listOfFiles[index].toPath());
 			    ByteArrayInputStream inputstream = new ByteArrayInputStream(input);
 
 				IOHandler ioh = new GraphMLIOHandler();
 				ioh.read(graph, inputstream);
 
 				setGraphView(graph, layoutStr, widthStr, heightStr, 0, 0);
-
+				
 				ioh = new SVGIOHandler();  
 				ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 				ioh.write(graph, outStream);
@@ -1261,11 +1283,21 @@ public class ServiceClass extends Service {
 		viewPort.setSize(width, height);
 
 		if(viewPointX != 0 || viewPointY != 0){
-//			double zoomW = ((double)width)/(box.width);
-//			double zoomH = ((double)height)/(box.height);
+//			int centerSetOffX = (int)((viewPointX)-(width/2));
+//			int centerSetOffY = (int)((viewPointY)-(height/2));
+//			double zoomW = ((double)width)/(box.width-centerSetOffX);
+//			double zoomH = ((double)height)/(box.height-centerSetOffY);
 //			double zoom = (zoomH>zoomW)? zoomW: zoomH; 
 //			viewPort.setZoom(zoom);
-			viewPort.setViewPoint((int)((viewPointX)-(width/2)), (int)((viewPointY-(height/2))));
+						
+//			viewPort.setViewPoint(centerSetOffX, centerSetOffY);
+//			int sizeX = centerSetOffX<0? (box.width-centerSetOffX): (box.width);
+//			int sizeY = centerSetOffY<0? (box.height-centerSetOffY): (box.height);
+//			viewPort.setSize(sizeX, sizeY);
+			
+			viewPort.fitContent();
+			viewPort.setCenter(viewPointX, viewPointY);
+//			zoom = viewPort.getZoom();
 		}
 		else{
 			viewPort.fitContent();
@@ -1326,4 +1358,5 @@ public class ServiceClass extends Service {
 
 	    return null;
 	  }
+	
 }

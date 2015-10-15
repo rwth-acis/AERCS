@@ -39,11 +39,11 @@
 			<y:SharedData>
 				<y:Brush name="SolidBrush" color="Black" id="1"/>
 				<y:Brush name="SolidBrush" color="White" id="2"/>
-				<y:ISimpleLabelStyle clipText="true" id="3">
+				<y:ISimpleLabelStyle clipText="true"id="3">
 					<y:Font family="dialog" points="13" style="Regular" />
 					<y:Brush refid="1"/>
 				</y:ISimpleLabelStyle>
-				<y:InteriorLabelModel position="Center" id="4">
+				<y:InteriorLabelModel position="Center"id="4">
 					<y:ModelState>
 						<y:Insets left="0" right="0" top="0" bottom="0"/>
 					</y:ModelState>
@@ -178,7 +178,7 @@ Implementation (PLDI)</data>
 <node id="G:n1789">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>PPOPP</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="22" height="22"/></data>
-<data key="d5">ACM SIGPLAN Symposium on Principles and
+<data key="d5">ACM SIGPLAN Symposium on Principles &amp;
 Practice of Parallel Programming (PPOPP)</data>
 <data key="d7">1789</data>
 </node>
@@ -1157,7 +1157,7 @@ Programming (PLILP)</data>
 <node id="G:n1570">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>SP</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="23" height="23"/></data>
-<data key="d5">IEEE Symposium on Security and Privacy (SandP)</data>
+<data key="d5">IEEE Symposium on Security and Privacy (S&amp;P)</data>
 <data key="d7">1570</data>
 </node>
 <edge id="G:e96" source="G:n63" target="G:n1570">
@@ -1571,7 +1571,7 @@ Medical Decision Making (AIMDM)</data>
 <node id="G:n213">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>AUSFORENSICS</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Australian Computer, Network and Information Forensics Conference</data>
+<data key="d5">Australian Computer, Network &amp; Information Forensics Conference</data>
 <data key="d7">213</data>
 </node>
 <edge id="G:e133" source="G:n134" target="G:n213">
@@ -1993,7 +1993,7 @@ Medical Decision Making (AIMDM)</data>
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>JELIA</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="21" height="21"/></data>
 <data key="d5">Logics in Artificial Intelligence -
-JournÃ©es EuropÃ©ennes sur la Logique en Intelligence Artificielle (JELIA)</data>
+Journ&eacute;es Europ&eacute;ennes sur la Logique en Intelligence Artificielle (JELIA)</data>
 <data key="d7">1382</data>
 </node>
 <edge id="G:e180" source="G:n160" target="G:n1382">
@@ -2452,7 +2452,7 @@ Computer Science (STACS)</data>
 <node id="G:n192">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>BDA</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="22" height="22"/></data>
-<data key="d5">JournÃ©es Bases de DonnÃ©es AvancÃ©es (BDA)</data>
+<data key="d5">Journ&eacute;es Bases de Donn&eacute;es Avanc&eacute;es (BDA)</data>
 <data key="d7">192</data>
 </node>
 <node id="G:n813">
@@ -2776,7 +2776,7 @@ Intelligence (PRICAI)</data>
 <node id="G:n225">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>AWPN</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Algorithmen und Werkzeuge fÃ¼r Petrinetze</data>
+<data key="d5">Algorithmen und Werkzeuge f&uuml;r Petrinetze</data>
 <data key="d7">225</data>
 </node>
 <node id="G:n2018">
@@ -2849,7 +2849,7 @@ Intelligence (PRICAI)</data>
 <node id="G:n239">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>BTW</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="22" height="22"/></data>
-<data key="d5">Datenbanksysteme fÃ¼r Business, Technologie und Web</data>
+<data key="d5">Datenbanksysteme f&uuml;r Business, Technologie und Web</data>
 <data key="d7">239</data>
 </node>
 <node id="G:n800">
@@ -3112,7 +3112,7 @@ Intelligence (PRICAI)</data>
 <node id="G:n263">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>CAEPIA</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="21" height="21"/></data>
-<data key="d5">Conferencia de la AsociaciÃ³n EspaÃ±ola para la Inteligencia Artificial</data>
+<data key="d5">Conferencia de la Asociaci&oacute;n Espa&ntilde;ola para la Inteligencia Artificial</data>
 <data key="d7">263</data>
 </node>
 <node id="G:n981">
@@ -3179,13 +3179,13 @@ Intelligence (PRICAI)</data>
 <node id="G:n268">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>CAL</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">ConfÃ©rence francophone sur les Architectures Logicielles</data>
+<data key="d5">Conf&eacute;rence francophone sur les Architectures Logicielles</data>
 <data key="d7">268</data>
 </node>
 <node id="G:n2446">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>LMO</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Langages et ModÃ¨les Ã  Objets</data>
+<data key="d5">Langages et Mod&egrave;les &agrave; Objets</data>
 <data key="d7">2446</data>
 </node>
 <edge id="G:e282" source="G:n268" target="G:n2446">
@@ -4658,7 +4658,7 @@ Typed Lambda Calculus and Applications (TLCA)</data>
 <node id="G:n397">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>CORIA</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="21" height="21"/></data>
-<data key="d5">CORIA  (COnfÃ©rence en Recherche d'Infomations et Applications)</data>
+<data key="d5">CORIA  (COnf&eacute;rence en Recherche d'Infomations et Applications)</data>
 <data key="d7">397</data>
 </node>
 <edge id="G:e457" source="G:n397" target="G:n813">
@@ -5749,7 +5749,7 @@ Rechen- und Kommunikationssystemen (MMB)</data>
 <node id="G:n518">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>DIMVA</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Detection of Intrusions and Malware and Vulnerability Assessment</data>
+<data key="d5">Detection of Intrusions and Malware &amp; Vulnerability Assessment</data>
 <data key="d7">518</data>
 </node>
 <node id="G:n1562">
@@ -6294,7 +6294,7 @@ and Knowledge Discovery (PKDD)</data>
 <node id="G:n2398">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>FDBS</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Workshop FÃ¶derierte Datenbanken (FDBS)</data>
+<data key="d5">Workshop F&ouml;derierte Datenbanken (FDBS)</data>
 <data key="d7">2398</data>
 </node>
 <edge id="G:e621" source="G:n591" target="G:n2398">
@@ -6630,13 +6630,13 @@ and Knowledge Discovery (PKDD)</data>
 <node id="G:n624">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>EMV</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Elektromagnetische VertrÃ¤glichkeit</data>
+<data key="d5">Elektromagnetische Vertr&auml;glichkeit</data>
 <data key="d7">624</data>
 </node>
 <node id="G:n737">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>GMMEMV</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Elektromagnetische VertrÃ¤glichkeit in der KFZ-Technik</data>
+<data key="d5">Elektromagnetische Vertr&auml;glichkeit in der KFZ-Technik</data>
 <data key="d7">737</data>
 </node>
 <edge id="G:e657" source="G:n624" target="G:n737">
@@ -6697,7 +6697,7 @@ and Knowledge Discovery (PKDD)</data>
 <node id="G:n630">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>EPK</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">GeschÃ¤ftsprozessmanagement mit Ereignisgesteuerten Prozessketten</data>
+<data key="d5">Gesch&auml;ftsprozessmanagement mit Ereignisgesteuerten Prozessketten</data>
 <data key="d7">630</data>
 </node>
 <node id="G:n1198">
@@ -7182,7 +7182,7 @@ Program Manipulation (PEPM)</data>
 <node id="G:n2075">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>F-IC</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">JournÃ©es Francophones d'IngÃ©nierie des Connaissances</data>
+<data key="d5">Journ&eacute;es Francophones d'Ing&eacute;nierie des Connaissances</data>
 <data key="d7">2075</data>
 </node>
 <edge id="G:e712" source="G:n687" target="G:n2075">
@@ -8932,7 +8932,7 @@ Systems (ICDCS)</data>
 <node id="G:n1384">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>JFPLC</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="21" height="21"/></data>
-<data key="d5">JournÃ©es Francophones de Programmation Logique par Contraintes</data>
+<data key="d5">Journ&eacute;es Francophones de Programmation Logique par Contraintes</data>
 <data key="d7">1384</data>
 </node>
 <edge id="G:e934" source="G:n969" target="G:n1384">
@@ -9387,7 +9387,7 @@ Scottish Functional Programming Workshops</data>
 <node id="G:n2054">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>MMSEC</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Multimedia and Security</data>
+<data key="d5">Multimedia &amp; Security</data>
 <data key="d7">2054</data>
 </node>
 <edge id="G:e990" source="G:n1050" target="G:n2054">
@@ -9511,7 +9511,7 @@ Scottish Functional Programming Workshops</data>
 <node id="G:n2058">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>WCNC</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="24" height="24"/></data>
-<data key="d5">IEEE Wireless Communications and Networking Conference</data>
+<data key="d5">IEEE Wireless Communications &amp; Networking Conference</data>
 <data key="d7">2058</data>
 </node>
 <edge id="G:e1004" source="G:n1084" target="G:n2058">
@@ -10402,7 +10402,7 @@ Geographic Information Systems</data>
 <node id="G:n1826">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>SIROCCO</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="21" height="21"/></data>
-<data key="d5">Colloquium on Structural Information and Communication Complexity</data>
+<data key="d5">Colloquium on Structural Information &amp; Communication Complexity</data>
 <data key="d7">1826</data>
 </node>
 <edge id="G:e1122" source="G:n1332" target="G:n1826">
@@ -10560,7 +10560,7 @@ Geographic Information Systems</data>
 <node id="G:n1414">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>JISBD</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="22" height="22"/></data>
-<data key="d5">Jornadas de IngenierÃ­a del Software y Bases de Datos</data>
+<data key="d5">Jornadas de Ingenier&iacute;a del Software y Bases de Datos</data>
 <data key="d7">1414</data>
 </node>
 <node id="G:n1971">
@@ -10658,7 +10658,7 @@ Geographic Information Systems</data>
 <node id="G:n2088">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>OBJEKT</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="20" height="20"/></data>
-<data key="d5">Objektbanken fÃ¼r Experten</data>
+<data key="d5">Objektbanken f&uuml;r Experten</data>
 <data key="d7">2088</data>
 </node>
 <edge id="G:e1154" source="G:n1434" target="G:n2088">
@@ -10775,13 +10775,13 @@ Geographic Information Systems</data>
 <node id="G:n1476">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>OGAI</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="21" height="21"/></data>
-<data key="d5">Ãsterreichische Artificial Intelligence-Tagung (ÃGAI)</data>
+<data key="d5">&Ouml;sterreichische Artificial Intelligence-Tagung (&Ouml;GAI)</data>
 <data key="d7">1476</data>
 </node>
 <node id="G:n1489">
 <data key="d2"><y:Labels><y:Label><y:ISimpleLabelStyle refid="3"/><y:ExteriorLabelModel refid="4"/><y:Text>KI</y:Text></y:Label></y:Labels></data>
 <data key="d3"><y:Geometry width="25" height="25"/></data>
-<data key="d5">Deutsche Jahrestagung fÃ¼r KÃ¼nstliche Intelligenz</data>
+<data key="d5">Deutsche Jahrestagung f&uuml;r K&uuml;nstliche Intelligenz</data>
 <data key="d7">1489</data>
 </node>
 <edge id="G:e1169" source="G:n1476" target="G:n1489">
