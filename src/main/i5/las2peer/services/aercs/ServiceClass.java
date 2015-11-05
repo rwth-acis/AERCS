@@ -5,11 +5,6 @@ import i5.las2peer.restMapper.HttpResponse;
 import i5.las2peer.restMapper.MediaType;
 import i5.las2peer.restMapper.RESTMapper;
 import i5.las2peer.restMapper.annotations.ContentParam;
-import i5.las2peer.restMapper.annotations.GET;
-import i5.las2peer.restMapper.annotations.POST;
-import i5.las2peer.restMapper.annotations.Path;
-import i5.las2peer.restMapper.annotations.Produces;
-import i5.las2peer.restMapper.annotations.QueryParam;
 import i5.las2peer.restMapper.annotations.Version;
 import i5.las2peer.restMapper.tools.ValidationResult;
 import i5.las2peer.restMapper.tools.XMLCheck;
@@ -32,6 +27,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import y.base.Edge;
 import y.base.Node;
@@ -140,7 +142,7 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("conferences")
 	public HttpResponse selectConferences(
-			@QueryParam(name="startChar", defaultValue="A") String startChar){
+			@DefaultValue("A") @QueryParam("startChar") String startChar){
 		int httpStatus = 200;
 		String content = new String();
 		if(startChar.length() != 1) {
@@ -181,8 +183,8 @@ public class ServiceClass extends Service {
 	 */
 	@GET
 	@Path("journals")
-	public HttpResponse selectJournals(@QueryParam(
-			name="startChar", defaultValue="A") String startChar){
+	public HttpResponse selectJournals(
+			@DefaultValue("A") @QueryParam("startChar") String startChar){
 		int httpStatus = 200;
 		String content = new String();
 		if(startChar.length() != 1) {
@@ -225,8 +227,8 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("events")
 	public HttpResponse selectEvents(
-			@QueryParam(name="id", defaultValue = "") String id,
-			@QueryParam(name="item", defaultValue = "1") String item){
+			@DefaultValue("") @QueryParam("id") String id,
+			@DefaultValue("1") @QueryParam("item") String item){
 		int httpStatus = 200;
 		String content = new String();
 		JSONArray jsa = new JSONArray();
@@ -308,7 +310,7 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("seriesCharts")
 	public HttpResponse getChartUrls(
-			@QueryParam(name="id", defaultValue="") String id){
+			@DefaultValue("") @QueryParam("id") String id){
 		int httpStatus = 200;
 		String content = new String();
 		JSONArray jsa = new JSONArray();
@@ -409,7 +411,7 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("event")
 	public HttpResponse selectEvent(
-			@QueryParam(name="id", defaultValue = "") String id){
+			@DefaultValue("") @QueryParam("id") String id){
 		int httpStatus = 200;
 		String content = new String();
 		JSONArray jsa = new JSONArray();
@@ -459,8 +461,8 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("person")
 	public HttpResponse selectPerson(
-			@QueryParam(name="id", defaultValue = "") String id,
-			@QueryParam(name="key", defaultValue = "") String key){
+			@DefaultValue("") @QueryParam("id") String id,
+			@DefaultValue("") @QueryParam("key") String key){
 		int httpStatus = 200;
 		String content = new String();
 		JSONArray jsa = new JSONArray();
@@ -542,12 +544,12 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("ranking")
 	public HttpResponse getRanking(
-			@QueryParam(name="conf", defaultValue = "0") Integer conf,
-			@QueryParam(name="journal", defaultValue = "0") Integer journal,
-			@QueryParam(name="domain", defaultValue = "0") Integer domain,
-			@QueryParam(name="page", defaultValue = "1") Integer page,
-			@QueryParam(name="col", defaultValue = "5") Integer col,
-			@QueryParam(name="order", defaultValue = "0") Integer order){
+			@DefaultValue("0") @QueryParam("conf")  Integer conf,
+			@DefaultValue("0") @QueryParam("journal") Integer journal,
+			@DefaultValue("0") @QueryParam("domain")  Integer domain,
+			@DefaultValue("1") @QueryParam("page") Integer page,
+			@DefaultValue("5") @QueryParam("col") Integer col,
+			@DefaultValue("0") @QueryParam("order") Integer order){
 		int httpStatus = 200;
 		String content = new String();
 		JSONArray jsa = new JSONArray();
@@ -660,10 +662,10 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("seriesComparison")
 	public HttpResponse selectedSeriesComparison(
-			@QueryParam(name="selectedSeries", defaultValue = "") String selectedSeries,
-			@QueryParam(name="searchKeyword", defaultValue = "") String searchKeyword,
-			@QueryParam(name="typeOfSeriesSearchIn", defaultValue = "both") String typeOfSeriesSearchIn,
-			@QueryParam(name="startChar", defaultValue = "A") String startChar){
+			@DefaultValue("") @QueryParam("selectedSeries") String selectedSeries,
+			@DefaultValue("") @QueryParam("searchKeyword") String searchKeyword,
+			@DefaultValue("both") @QueryParam("typeOfSeriesSearchIn") String typeOfSeriesSearchIn,
+			@DefaultValue("A") @QueryParam("startChar") String startChar){
 		int httpStatus = 200;
 		String content = new String();
 		JSONArray jsa = new JSONArray();
@@ -780,9 +782,9 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("search")
 	public HttpResponse searchResults(
-			@QueryParam(name="searchdata", defaultValue="") String searchdata,
-			@QueryParam(name="searchfield", defaultValue="1") String searchfield,
-			@QueryParam(name="page", defaultValue="1") String page){
+			@DefaultValue("") @QueryParam("searchdata") String searchdata,
+			@DefaultValue("1") @QueryParam("searchfield") String searchfield,
+			@DefaultValue("1") @QueryParam("page") String page){
 		int httpStatus = 200;
 		String content = new String();
 
@@ -882,8 +884,8 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("drawSeriesComparison")
 	public HttpResponse drawSeriesComparison(
-			@QueryParam(name="selectedSeriesData", defaultValue = "") String selectedSeriesData,
-			@QueryParam(name="chartType", defaultValue = "") String chartType){
+			@DefaultValue("") @QueryParam("selectedSeriesData") String selectedSeriesData,
+			@DefaultValue("") @QueryParam("chartType") String chartType){
 		int httpStatus = 200;
 		String content = new String();
 		
@@ -955,11 +957,11 @@ public class ServiceClass extends Service {
 	@POST
 	@Path("eventNetworkVisualization")
 	public HttpResponse getEventNetworkVisualization(
-			@QueryParam(name="id", defaultValue = "") String id,
-			@QueryParam(name="layout", defaultValue = "circular") String layoutStr,
-			@QueryParam(name="search", defaultValue = "") String search,
-			@QueryParam(name="width", defaultValue = "") String widthStr,
-			@QueryParam(name="height", defaultValue = "") String heightStr,
+			@DefaultValue("") @QueryParam("id") String id,
+			@DefaultValue("circular") @QueryParam("layout") String layoutStr,
+			@DefaultValue("") @QueryParam("search") String search,
+			@DefaultValue("") @QueryParam("width") String widthStr,
+			@DefaultValue("") @QueryParam("height") String heightStr,
 			@ContentParam String graphML){
 		int httpStatus = 200;
 		String content = new String();
@@ -1063,11 +1065,11 @@ public class ServiceClass extends Service {
 	@POST
 	@Path("personNetworkVisualization")
 	public HttpResponse getPersonNetworkVisualization(
-			@QueryParam(name="id", defaultValue = "") String id,
-			@QueryParam(name="layout", defaultValue = "circular") String layoutStr,
-			@QueryParam(name="search", defaultValue = "") String search,
-			@QueryParam(name="width", defaultValue = "") String widthStr,
-			@QueryParam(name="height", defaultValue = "") String heightStr,
+			@DefaultValue("") @QueryParam("id") String id,
+			@DefaultValue("circular") @QueryParam("layout") String layoutStr,
+			@DefaultValue("") @QueryParam("search") String search,
+			@DefaultValue("") @QueryParam("width") String widthStr,
+			@DefaultValue("") @QueryParam("height") String heightStr,
 			@ContentParam String graphML){
 		
 		int httpStatus = 200;
@@ -1163,10 +1165,10 @@ public class ServiceClass extends Service {
 	@GET
 	@Path("networkVisualization")
 	public HttpResponse getNetworkVisualization(
-			@QueryParam(name="graphml", defaultValue = "") String graphml,
-			@QueryParam(name="layout", defaultValue = "circular") String layoutStr,
-			@QueryParam(name="width", defaultValue = "") String widthStr,
-			@QueryParam(name="height", defaultValue = "") String heightStr){
+			@DefaultValue("") @QueryParam("graphml") String graphml,
+			@DefaultValue("") @QueryParam("layout") String layoutStr,
+			@DefaultValue("") @QueryParam("width") String widthStr,
+			@DefaultValue("") @QueryParam("height") String heightStr){
 		int httpStatus = 200;
 		String content = new String();
 		JSONArray jsa = new JSONArray();

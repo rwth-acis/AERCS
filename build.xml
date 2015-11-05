@@ -1,4 +1,4 @@
-<project name="LAS2peer-Template-Project" default="all" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="AERCS-Service-Project" default="all" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     
     <property file="etc/ant_configuration/user.properties"/>
     <property file="etc/ant_configuration/service.properties"/>
@@ -68,7 +68,7 @@
         <ivy:settings>
             <credentials host="role.dbis.rwth-aachen.de:9911/archiva"  realm="Repository internal"/>
         </ivy:settings>
-        <ivy:retrieve type="jar" />
+        <ivy:retrieve type="jar, bundle" />
     </target>
 	
 	
@@ -184,8 +184,8 @@
     </target>
 	
     <target name="junit_tests" depends="init_junit, compile_all">
-        <junit fork="yes" haltonerror="yes" haltonfailure="yes" printsummary="yes">
-            <classpath>
+        <junit fork="yes" haltonerror="yes" haltonfailure="yes" printsummary="yes">            
+        	<classpath>
                 <pathelement path="${tmp.classes}" />
                 <pathelement path="${tmp.junit}" />
                 <pathelement path="${lib.junit}" />
