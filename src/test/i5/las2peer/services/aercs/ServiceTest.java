@@ -65,7 +65,7 @@ public class ServiceTest {
 		node.storeAgent(MockAgentFactory.getAdam());
 		node.launch();
 		
-		ServiceAgent testService = ServiceAgent.generateNewAgent(testServiceClass, "a pass");
+		ServiceAgent testService = ServiceAgent.createServiceAgent(testServiceClass, "a pass");
 		testService.unlockPrivateKey("a pass");
 		
 		node.registerReceiver(testService);
@@ -74,7 +74,6 @@ public class ServiceTest {
 		logStream = new ByteArrayOutputStream ();
 		
 		connector = new WebConnector(true,HTTP_PORT,false,1000);
-		connector.setSocketTimeout(10000);
 		connector.setLogStream(new PrintStream (logStream));
 		connector.start ( node );
         Thread.sleep(1000); //wait a second for the connector to become ready
@@ -159,7 +158,7 @@ public class ServiceTest {
 	}
 	
 	/////////////////////////// tests during development process for debugging ////////////////////////////////////
-	
+	@Ignore
 	@Test
 	public void testDuringDevelopment()
 	{
@@ -1306,7 +1305,7 @@ public class ServiceTest {
 		try
 		{
 			c.setLogin(Long.toString(testAgent.getId()), testPass);
-			ClientResponse result=c.sendRequest("GET", mainPath +"networkVisualization?graphml=sth sth", "");
+			ClientResponse result=c.sendRequest("GET", mainPath +"networkVisualization?layout=circular&graphml=sth", "");
 			assertEquals( 400, result.getHttpCode() ); // check if request fails
 			
 			assertTrue(result.getResponse().trim().contains("could not found the given graphml file")); // should return error message
