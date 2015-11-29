@@ -11,7 +11,7 @@
         <dependency org="OracleJDBC" name="OracleJDBC" rev="14" />
         <dependency org="i5" name="batik" rev="1.0" />
         
-        <dependency org="junit" name="junit" rev="4.11"/>
+        <dependency org="junit" name="junit" rev="4.12"/>
         
     </dependencies>
 </ivy-module>

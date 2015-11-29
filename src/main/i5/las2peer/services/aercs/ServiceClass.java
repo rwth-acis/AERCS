@@ -1,6 +1,8 @@
 package i5.las2peer.services.aercs;
 
 import i5.las2peer.api.Service;
+import i5.las2peer.logging.L2pLogger;
+import i5.las2peer.logging.NodeObserver.Event;
 import i5.las2peer.restMapper.HttpResponse;
 import i5.las2peer.restMapper.MediaType;
 import i5.las2peer.restMapper.RESTMapper;
@@ -27,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.logging.Level;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -64,6 +67,9 @@ import net.minidev.json.JSONObject;
 @Version("0.1")
 @Produces(MediaType.APPLICATION_JSON)
 public class ServiceClass extends Service {
+	
+	// instantiate the logger class
+	private final L2pLogger logger = L2pLogger.getInstance(ServiceClass.class.getName());
 	
 	public ServiceClass() {
 		// read and set properties values
@@ -151,9 +157,9 @@ public class ServiceClass extends Service {
 		}
 		else {
 			EventSeriesPeer es = new EventSeriesPeer();
-			ResultSet rs = es.selectConferences(startChar);
 			JSONArray jsa = new JSONArray();
 			try {
+				ResultSet rs = es.selectConferences(startChar);
 				while (rs.next()) {
 					JSONObject jso = new JSONObject();
 					jso.put("id", rs.getString(1));
@@ -164,8 +170,12 @@ public class ServiceClass extends Service {
 				}
 				rs.getStatement().close();
 				rs.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				// write error to logfile and console
+				logger.log(Level.SEVERE, e.toString(), e);
+				// create and publish a monitoring message
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+				
 				httpStatus = 500;
 				content = "A Database Error occured";
 			}
@@ -193,9 +203,9 @@ public class ServiceClass extends Service {
 		}
 		else {
 			EventSeriesPeer es = new EventSeriesPeer();
-			ResultSet rs = es.selectJournals(startChar);
 			JSONArray jsa = new JSONArray();
 			try {
+				ResultSet rs = es.selectJournals(startChar);
 				while (rs.next()) {
 					JSONObject jso = new JSONObject();
 					jso.put("id", rs.getString(1));
@@ -206,8 +216,10 @@ public class ServiceClass extends Service {
 				}
 				rs.getStatement().close();
 				rs.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+				
 				httpStatus = 500;
 				content = "A Database Error occured";
 			}
@@ -240,19 +252,20 @@ public class ServiceClass extends Service {
 		else{
 			EventSeriesPeer es = new EventSeriesPeer();
 			ObjectQuery events = new ObjectQuery();
-			String seriesName = events.querySSeries(id);
-            String newID = events.querySeriesNewestYear(id);
-
-			JSONObject jso_name = new JSONObject();
-			jso_name.put("series_name", seriesName);
-			jsa.add(jso_name);
-			JSONObject jso_year = new JSONObject();
-			jso_year.put("newest_year", newID);
-			jsa.add(jso_year);
-						
-			if(item.equals("1")){
-				ResultSet rs = es.selectEventsForASeries(id);
-				try {
+			
+			try {
+				String seriesName = events.querySSeries(id);
+	            String newID = events.querySeriesNewestYear(id);
+	
+				JSONObject jso_name = new JSONObject();
+				jso_name.put("series_name", seriesName);
+				jsa.add(jso_name);
+				JSONObject jso_year = new JSONObject();
+				jso_year.put("newest_year", newID);
+				jsa.add(jso_year);
+							
+				if(item.equals("1")){
+					ResultSet rs = es.selectEventsForASeries(id);
 					while (rs.next()) {
 						JSONObject jso = new JSONObject();
 						jso.put("id", rs.getString(1));
@@ -264,15 +277,9 @@ public class ServiceClass extends Service {
 					}
 					rs.getStatement().close();
 					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-					httpStatus = 500;
-					content = "A Database Error occured";
 				}
-			}
-			if(item.equals("3")){
-				ResultSet rs = events.searchAuthorKeyMembers(id);
-				try {
+				if(item.equals("3")){
+					ResultSet rs = events.searchAuthorKeyMembers(id);
 					while (rs.next() && rs.getInt(1) >= 4) {
 	                	JSONObject jso = new JSONObject();
 		                int count = rs.getInt(1);
@@ -291,11 +298,13 @@ public class ServiceClass extends Service {
 					}
 					rs.getStatement().close();
 					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-					httpStatus = 500;
-					content = "A Database Error occured";
 				}
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
+				httpStatus = 500;
+				content = "A Database Error occured";
 			}
 		}
 			
@@ -390,8 +399,10 @@ public class ServiceClass extends Service {
             	jso.put("urls", url);
             	jsa.add(jso);
 
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
 				httpStatus = 500;
 				content = "A Database Error occured";
 			}
@@ -423,9 +434,9 @@ public class ServiceClass extends Service {
 		else{
 			ObjectQuery events = new ObjectQuery();
 			
-			// id, name, country, year, series_id
-		    ResultSet rs = events.searchEvent(id);		    
 		    try {
+				// id, name, country, year, series_id
+			    ResultSet rs = events.searchEvent(id);		    
 				if (rs.next()) {
 					JSONObject jso = new JSONObject();
 					jso.put("id", rs.getString(1));
@@ -437,17 +448,19 @@ public class ServiceClass extends Service {
 				}
 				rs.getStatement().close();
 				rs.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+				
+			    Vector<Media> relatedSeries = events.searchRelatedSeriesByEvent(Integer.parseInt(id));
+			    Vector<Media> urls = events.searchWebsiteByEvent(Integer.parseInt(id));
+			
+			    jsa.add(relatedSeries);
+			    jsa.add(urls);
+		    } catch (Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
 				httpStatus = 500;
 				content = "A Database Error occured";
 			}
-
-		    Vector<Media> relatedSeries = events.searchRelatedSeriesByEvent(Integer.parseInt(id));
-		    Vector<Media> urls = events.searchWebsiteByEvent(Integer.parseInt(id));
-
-		    jsa.add(relatedSeries);
-		    jsa.add(urls);
 		}
 		
 		if(httpStatus == 200) {
@@ -471,26 +484,26 @@ public class ServiceClass extends Service {
 			httpStatus = 400;
 			content = "id or key should be provided";
 		}
-		else{
-		    if (id == ""){
-		        AuthorNamePeer anp = new AuthorNamePeer();
-		        id = anp.getIdFromKey(key);
-		    }
-		    else if(key == "")
-		    {
-		        AuthorNamePeer anp = new AuthorNamePeer();
-		        key = anp.getKeyFromId(id);
-		    }
-	
-			ObjectQuery series = new ObjectQuery();
-			// id, name
-		    ResultSet rs = series.searchPerson(id);
-		    
-		    // u.url, u.description
-		    ResultSet rs1 = series.searchPersonUrl(id);
-		    Vector<EventSeries> events = series.searchEventByParticipant(id) ;
-				    
+		else{    
 		    try {
+			    if (id == ""){
+			        AuthorNamePeer anp = new AuthorNamePeer();
+			        id = anp.getIdFromKey(key);
+			    }
+			    else if(key == "")
+			    {
+			        AuthorNamePeer anp = new AuthorNamePeer();
+			        key = anp.getKeyFromId(id);
+			    }
+		
+				ObjectQuery series = new ObjectQuery();
+				// id, name
+			    ResultSet rs = series.searchPerson(id);
+			    
+			    // u.url, u.description
+			    ResultSet rs1 = series.searchPersonUrl(id);
+			    Vector<EventSeries> events = series.searchEventByParticipant(id) ;
+
 				JSONObject jso = new JSONObject();
 				if (rs.next()) {
 					jso.put("id", rs.getString(1));
@@ -525,8 +538,10 @@ public class ServiceClass extends Service {
 				}
 				jsa.add(jsa1);
 	
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
 				httpStatus = 500;
 				content = "A Database Error occured";
 			}
@@ -573,47 +588,48 @@ public class ServiceClass extends Service {
 		    ResultSet rs = null;
 		    int resultNum = 0;
 
-		    int type = -1;
-
-		    if ( conf == 1 && journal == 1 )
-		    {
-		        type = 0;
-		    }
-		    else if ( conf == 1 )
-		    {
-		        type = 1;
-		    }
-		    else if ( journal == 1)
-		    {
-		        type = 2;
-		    }
-		    
-		    if (type >= 0)
-		    {
-		        rs = es.getRankings(firstRow, lastRow, col, order, domainId, type);
-		        resultNum = es.countRankings(col, order, domainId, type);
-		    }
-		    
-		    // id, name
-		    ResultSet domainRs = es.getDomains();
-
-			JSONObject jso = new JSONObject();
-			JSONArray jsa1 = new JSONArray();
-			jso.put("resultNum", resultNum);
-			jso.put("resultPerPage", resultPerPage);
-			jso.put("conf", conf);
-			jso.put("journal", journal);
-			jso.put("domain", domain);
-			jso.put("page", page);
-			jso.put("col", col);
-			jso.put("order", order);
-			jso.put("queryString", queryString);
-			jso.put("pagedQueryString", pagedQueryString);
-			jso.put("sortedQueryString", sortedQueryString);
-
-			jsa.add(jso);
-
 		    try {
+
+			    int type = -1;
+	
+			    if ( conf == 1 && journal == 1 )
+			    {
+			        type = 0;
+			    }
+			    else if ( conf == 1 )
+			    {
+			        type = 1;
+			    }
+			    else if ( journal == 1)
+			    {
+			        type = 2;
+			    }
+			    
+			    if (type >= 0)
+			    {
+			        rs = es.getRankings(firstRow, lastRow, col, order, domainId, type);
+			        resultNum = es.countRankings(col, order, domainId, type);
+			    }
+			    
+			    // id, name
+			    ResultSet domainRs = es.getDomains();
+	
+				JSONObject jso = new JSONObject();
+				JSONArray jsa1 = new JSONArray();
+				jso.put("resultNum", resultNum);
+				jso.put("resultPerPage", resultPerPage);
+				jso.put("conf", conf);
+				jso.put("journal", journal);
+				jso.put("domain", domain);
+				jso.put("page", page);
+				jso.put("col", col);
+				jso.put("order", order);
+				jso.put("queryString", queryString);
+				jso.put("pagedQueryString", pagedQueryString);
+				jso.put("sortedQueryString", sortedQueryString);
+	
+				jsa.add(jso);
+
 				jsa1 = new JSONArray();
 				while (domainRs.next()) {
 					jso = new JSONObject();
@@ -644,8 +660,10 @@ public class ServiceClass extends Service {
 				}
 				jsa.add(jsa1);
 
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
 				httpStatus = 500;
 				content = "A Database Error occured";
 			}
@@ -709,7 +727,9 @@ public class ServiceClass extends Service {
 	        		try {
 						selectedSeries = URLDecoder.decode(selectedSeries, "UTF-8");
 					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
+						logger.log(Level.SEVERE, e.toString(), e);
+						L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
 						httpStatus = 500;
 						content = "Decoding error";
 					}
@@ -765,8 +785,10 @@ public class ServiceClass extends Service {
 				rs.getStatement().close();
 				rs.close();
 
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
 				httpStatus = 500;
 				content = "A Database Error occured";
 			}
@@ -799,16 +821,17 @@ public class ServiceClass extends Service {
 	    ResultSet rs = null;
         JSONArray jsa = new JSONArray();
 
-	    if (searchfield.equals("1"))
-	    {
-            resultNum = series.countPerson(searchdata);
-			JSONObject jso = new JSONObject();
-			jso.put("resultNum", resultNum);
-			jsa.add(jso);
+		try {
 
-            // a_key, a_name, a_p_num
-            rs = series.queryPerson(searchdata, fromRow, toRow);
-			try {
+		    if (searchfield.equals("1"))
+		    {
+	            resultNum = series.countPerson(searchdata);
+				JSONObject jso = new JSONObject();
+				jso.put("resultNum", resultNum);
+				jsa.add(jso);
+	
+	            // a_key, a_name, a_p_num
+	            rs = series.queryPerson(searchdata, fromRow, toRow);
 				while (rs.next()) {
 					jso = new JSONObject();
 					jso.put("key", rs.getString(1));
@@ -818,21 +841,16 @@ public class ServiceClass extends Service {
 				}
 				rs.getStatement().close();
 				rs.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-				httpStatus = 500;
-				content = "A Database Error occured";
-			} 
-	    }
-	    else if(searchfield.equals("2")){
-	    	resultNum = series.countEvent(searchdata);
-			JSONObject jso = new JSONObject();
-			jso.put("resultNum", resultNum);
-			jsa.add(jso);
-
-	    	// ev_id, ev_name, ev_series_key, ev_author_num
-            rs = series.queryEvent(searchdata, fromRow, toRow);
-            try {
+		    }
+		    else if(searchfield.equals("2")){
+		    	resultNum = series.countEvent(searchdata);
+				JSONObject jso = new JSONObject();
+				jso.put("resultNum", resultNum);
+				jsa.add(jso);
+	
+		    	// ev_id, ev_name, ev_series_key, ev_author_num
+	            rs = series.queryEvent(searchdata, fromRow, toRow);
+	           
 				while (rs.next()) {
 					jso = new JSONObject();
 					jso.put("id", rs.getInt(1));
@@ -843,22 +861,17 @@ public class ServiceClass extends Service {
 				}
 				rs.getStatement().close();
 				rs.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-				httpStatus = 500;
-				content = "A Database Error occured";
-			} 
-	    }
-	    else if(searchfield.equals("3")){
-            resultNum = series.countSeries(searchdata);
-			JSONObject jso = new JSONObject();
-			jso.put("resultNum", resultNum);
-			jsa.add(jso);
-
-            // id, name, series_key
-            rs = series.searchSeries(searchdata, fromRow, toRow);
-            try {
-				while (rs.next()) {
+		    }
+		    else if(searchfield.equals("3")){
+	            resultNum = series.countSeries(searchdata);
+				JSONObject jso = new JSONObject();
+				jso.put("resultNum", resultNum);
+				jsa.add(jso);
+	
+	            // id, name, series_key
+	            rs = series.searchSeries(searchdata, fromRow, toRow);
+	            
+					while (rs.next()) {
 					jso = new JSONObject();
 					jso.put("id", rs.getInt(1));
 					jso.put("name", rs.getString(2));
@@ -867,12 +880,14 @@ public class ServiceClass extends Service {
 				}
 				rs.getStatement().close();
 				rs.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-				httpStatus = 500;
-				content = "A Database Error occured";
-			} 
-	    }
+		    }
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+			L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
+			httpStatus = 500;
+			content = "A Database Error occured";
+		} 
 		if(httpStatus == 200) {
 			content = jsa.toJSONString();
 		}
@@ -892,7 +907,9 @@ public class ServiceClass extends Service {
 		try {
 			selectedSeriesData = URLDecoder.decode(selectedSeriesData, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e.toString(), e);
+			L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
 			httpStatus = 500;
 			content = "Decoding error";
 		}
@@ -940,8 +957,10 @@ public class ServiceClass extends Service {
 	        jso.put("urls", url);
 	        jsa.add(jso);
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+			L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
 			httpStatus = 500;
 			content = "A Database Error occured";
 		}
@@ -1002,16 +1021,18 @@ public class ServiceClass extends Service {
 			    }
 
 			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+				
 				httpStatus = 400;
 				content = "graph is not proper";
-				e.printStackTrace();
 			}
 		}
 		else{
 			ObjectQuery events = new ObjectQuery();
-			ResultSet event = events.searchEvent(id);
 			
 			try {
+				ResultSet event = events.searchEvent(id);
 				event.next();
 				String year = event.getString(4);
 				String series_id = String.valueOf(event.getInt(5));
@@ -1031,8 +1052,10 @@ public class ServiceClass extends Service {
 				rs.close();
 				
 				graph = createTree( jsa ); 
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
 				httpStatus = 500;
 				content = "A Database Error occured";
 			}
@@ -1054,7 +1077,8 @@ public class ServiceClass extends Service {
 				jso.put("graphML", outStreamGML.toString());
 				content = jso.toJSONString();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
 			}  
 		}
 		HttpResponse resp = new HttpResponse(content);
@@ -1111,9 +1135,11 @@ public class ServiceClass extends Service {
 			    }
 
 			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+			
 				httpStatus = 400;
 				content = "graph is not proper";
-				e.printStackTrace();
 			}
 		}
 		else{
@@ -1133,8 +1159,10 @@ public class ServiceClass extends Service {
 				rs.close();
 				
 				graph = createTree( jsa ); 
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+				
 				httpStatus = 500;
 				content = "A Database Error occured";
 			}
@@ -1154,7 +1182,8 @@ public class ServiceClass extends Service {
 				jso.put("graphML", outStreamGML.toString());
 				content = jso.toJSONString();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
 			}  
 		}
 		HttpResponse resp = new HttpResponse(content);
@@ -1177,7 +1206,10 @@ public class ServiceClass extends Service {
 		
 		try {
 			graphml = java.net.URLDecoder.decode(graphml, "UTF-8");
-		} catch (UnsupportedEncodingException e1) {
+		} catch (UnsupportedEncodingException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+			L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+		
 			httpStatus = 400;
 			content = "cannot decode URL argument";
 		}
@@ -1234,7 +1266,8 @@ public class ServiceClass extends Service {
 				jsa.add(jso);
 				content = jsa.toJSONString();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, e.toString(), e);
+				L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
 			}  
 		}
 		HttpResponse resp = new HttpResponse(content);
@@ -1341,6 +1374,9 @@ public class ServiceClass extends Service {
 	            graph.createEdge(sn,dn);
 	          }
 	        } catch(Exception e) {
+	          logger.log(Level.SEVERE, e.toString(), e);
+			  L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+
 	          System.out.println("nodelist size: "+ nodelist.size());
 	          System.out.println("nlist: ");
 	          for(int i = 0; i < nlist.length; i++)
@@ -1355,7 +1391,8 @@ public class ServiceClass extends Service {
 	      return graph;
 	    }
 	    catch (Exception e) {
-	      e.printStackTrace();
+			logger.log(Level.SEVERE, e.toString(), e);
+			L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
 	    }
 
 	    return null;
